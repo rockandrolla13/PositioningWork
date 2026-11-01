@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs,tabularx,enumitem,xurl,hyperref,microtype,array}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\DeclareUnicodeCharacter{2011}{-}
+\title{Positioning and Pain in Credit Markets: a Literature Review}
+\author{Prepared for the PositioningWork project}
+\date{1 November 2026}
+\begin{document}
+\maketitle
+
+\section*{The answer}
+\textbf{The literature supports flow and forced-selling effects in credit, but nobody has shown a positioning or Pain signal that predicts credit out of sample.} We found no such test for corporate bonds on RFQ, credit ETFs, credit futures or CDX. So our failed tests neither confirm nor contradict a published result. Five points matter most.
+
+\begin{enumerate}
+\item \textbf{A loss alone does not force selling.} Effects appear when a loss meets a binding limit, such as margin, leverage, regulatory capital or fund redemptions (Siriwardane 2019; Kang et al.\ 2020; Fang 2024).
+\item \textbf{Who holds the position decides the sign.} Levered accounts sell as limits approach (Bian et al.\ 2018). Insurers sell winners and keep losers (Ellul et al.\ 2015). One Pain number across all holders can cancel itself out.
+\item \textbf{Our zero of 53 cannot separate decay from low power.} Equity signals keep about half their performance after publication (McLean and Pontiff 2016). With about 14 independent observations, a signal that kept half its power would pass one test only about 17\% of the time. That arithmetic comes from the review, not from a paper.
+\item \textbf{Our cost-basis method has no published validation.} No paper we found estimates cost basis from open interest or CFTC data. The standard method also retires old lots with trading volume (Grinblatt and Han 2005), and ours does not.
+\item \textbf{Credit data has its own traps.} Price errors and one-sided filters inflate most of 108 published bond factors (Dickerson et al.). One widely used factor paper, Bai, Bali and Wen (2019), has been retracted.
+\end{enumerate}
+
+\section{Corporate bonds and RFQ}
+\textbf{Some client flow predicts returns, and some reverses.} Czech and Pinter (2020) use UK regulatory data with both parties named. Flow from well-connected clients predicts returns out to 30 days, with a top-minus-bottom spread of 17.1 bp. Flow from poorly connected clients reverses by 30 days.
+
+\textbf{Measured losses change trading.} Fang (2024) compares insurers trading the same bond at the same time, using book values. Insurers with larger unrealized losses provide less liquidity against fund fire sales. The price impact of flow-induced selling is $-0.406$ percentage points of yield spread per 1\% of amount outstanding. One standard deviation more peer loss adds $-0.420$. These numbers come from a working paper.
+
+\textbf{Selling pressure usually reverses.} This holds for insurer forced selling, sell herding and flow-driven fund pressure. Effects are largest in illiquid and high-yield bonds. That is also where price noise and costs are highest.
+
+\textbf{The open question is RFQ itself.} We found no paper that tests RFQ imbalance as a return or spread predictor. Published RFQ work studies costs and search. No public dataset we found gives client type at trade level.
+
+\textbf{What breaks flow measures in bonds:} basket trades, quasi-dealers on all-to-all venues, clients who are really supplying liquidity, and repeated inquiries for one order. The TRACE error rate is also material: Dick-Nielsen (2009) reports 7.7\% of reports are errors.
+
+\section{Credit ETFs}
+\textbf{Share count records dealer work more than investor views.} For US corporate bond ETFs, the top three authorised participants do 92\% of creations and redemptions, and bank participants do 90\% (Cai et al.\ 2023). Baskets are small and they change (Shim and Todorov 2021; Koont et al.\ 2025). So our null result on share count is plausible. No paper tests it directly.
+
+\textbf{Short interest mixes plumbing with bets.} Evans et al.\ (2026) show that market makers sell ETF shares short and create them later. That operational shorting does not predict one-month returns. Their return test covers equity ETFs only. Xiao (2022) finds higher short interest after redemption days in corporate bond ETFs.
+
+\textbf{Whether flows push bond prices is contested.}
+\begin{itemize}
+\item Dannhauser and Hoseinzade (2021): yes in the 2013 Taper Tantrum, reversing after about four months.
+\item Rossi et al.\ (2026 draft): no significant reaction.
+\item Agapova et al.\ (2025): ETFs act as a buffer, not as demand pressure.
+\end{itemize}
+The studies differ in period and flow measure. The effect may exist only when dealers are constrained. That reconciliation is the review's reading, and no paper tests it directly.
+
+\textbf{What the literature points to instead.} In order of evidence: split short interest into operational and directional parts, use bond-level basket data, condition on dealer capacity, and test price-based signals such as premiums. All are the review's reading. None is an established recipe for credit.
+
+\section{CDX and credit futures}
+\textbf{Public data cannot show who holds CDX.} Rule 17 CFR 43.4 bars disclosing swap parties in public trade data. Papers on holder types use confidential regulatory data.
+
+\textbf{The Pain idea has its strongest support here.} Siriwardane (2019) finds that margin payments by protection sellers explain 12\% of the variation in weekly CDS spread changes. It works because it measures losses at the actual holders. Public data cannot rebuild it.
+
+\textbf{But levered CDX holders were not visibly the forced side in March 2020.} A CFTC staff paper shows hedge funds buying about \$80 billion of protection net into 20 March (Coughlan et al.\ 2022). Bond investors may have been the forced sellers. So do not assume that CDX holders are always the ones forced out. This also tempers our earlier view that CDX is the natural home for Pain.
+
+\textbf{Rolls distort positions.} Positions spike around the March and September rolls. Average one-month rises reached 22\% over the six rolls before March 2020 (Coughlan et al.\ 2022). Any flow signal must adjust for them.
+
+\textbf{Credit futures have almost no history.} The CFTC reports Bloomberg HY, IG and IG Duration-Hedged futures, with 24, 26 and 8 reports. Only 20 to 25 traders report, and the top four IG traders held 76.8\% of longs on 27 October 2026. High yield has not appeared since 15 September 2026. Cboe IBHY and IBIG do not appear in the CFTC reports. We found no academic study of credit futures positioning.
+
+\section{Positioning, Pain and test design}
+\textbf{The closest published analogue to Pain} is Kang et al.\ (2020), on 26 commodity futures. After a large hedger capital loss, the return impact of a given position change more than doubles, from 8.9 to 21.2 bp. Those numbers come from a 2016 draft. Their loss measure needs no entry prices, so it is a simple benchmark for our ledger.
+
+\textbf{Three cost-basis methods exist:} weighting past prices by turnover (Grinblatt and Han 2005), building from fund holdings (Frazzini 2006), and reading book values from insurer filings (Fang 2024). Splitting gains from losses also matters, because the loss side can behave differently (An 2016).
+
+\textbf{Higher-power tests are possible.} Use weekly non-overlapping returns, since long horizons add little independent evidence (Boudoukh et al.\ 2008). Pool across contracts with robust inference. Test interactions, such as whether impact grows when losses and limits coincide.
+
+\section{Where the evidence conflicts}
+\small
+\begin{tabularx}{\linewidth}{@{}p{0.27\linewidth}LL@{}}
+\toprule
+Question & Positions & Likely reason \\
+\midrule
+Do ETF flows move bond prices? & Yes and reverses (Dannhauser and Hoseinzade). No (Rossi et al.). Buffer (Agapova et al.). & Stress window against broader samples \\
+Do fund outflows cause fire sales? & Little pressure (Choi et al.\ 2020). Real effects (Falato et al.; Fang). & Same-issuer controls and sample \\
+Do positions predict returns? & Yes in risk-premium tests (De Roon et al.; Kang et al.). Almost nothing in Granger tests (Sanders et al.). & The level mixes opposing demands \\
+Is bond momentum real? & Yes (Jostova et al.). Mostly noise and filters (Dickerson et al.). & The later work tests the earlier method \\
+Who was forced in March 2020? & Bond investors (Haddad et al.). Hedge funds were fast net buyers of CDX protection (Coughlan et al.). & These can fit together \\
+\bottomrule
+\end{tabularx}
+\normalsize
+
+\section{What this means for your four markets}
+These are our inferences, not findings.
+\begin{enumerate}
+\item \textbf{TRACE and RFQ.} Look for short-term pressure that reverses, and measure it against dealer capacity. Use spread-based entry levels. Your anonymous, single-dealer RFQ data cannot show client breadth, which is the split that mattered in Czech and Pinter.
+\item \textbf{Credit ETFs.} Drop share count as a position. Test basket data, directional short interest and premiums.
+\item \textbf{CDX.} Use proxies such as index skew and cleared totals, and accept that they do not show holders. Adjust for rolls.
+\item \textbf{Credit futures.} Monitor only. A few firms can move the series.
+\item \textbf{Measured holders.} Insurer book values in NAIC filings are the one real cost basis in credit. Access terms are unchecked.
+\end{enumerate}
+
+\section{Gaps the literature leaves open}
+\begin{enumerate}
+\item Any out-of-sample test of positions forecasting CDX spreads.
+\item Any test of RFQ imbalance against bond returns or spreads.
+\item Any test of bond ETF share count or short interest as positioning.
+\item Any cost-basis estimate from open interest, checked against true positions.
+\item Any post-publication test of CFTC positioning signals.
+\item Any corporate bond test of the disposition effect outside insurers.
+\end{enumerate}
+
+\section{How this review was done, and its limits}
+Five parallel AI-assisted searches covered credit ETFs, corporate bonds and RFQ, CDX and futures, positioning theory, and local documents. The search strings and exclusions are in the theme files in this folder. The review also covers 42 local documents, summarised in \texttt{E\_local\_documents.md}. Local documents gave no test on credit, and \texttt{ContraFlow.pdf} reports no evidence.
+
+\textbf{Checks.} All 196 distinct DOIs in the theme files resolve in Crossref. I checked first authors automatically on 72 ranked entries that have a standard heading. I inspected the two flags, and both were false positives from parsing. The check did not cover group B's ranked entries, because its format differs. A DOI that resolves shows only that the paper exists. It does not confirm a stated finding.
+
+\textbf{Limits.}
+\begin{itemize}
+\item Many entries were read at abstract level or in a working-paper draft. Each entry below states what was read, so check the source before relying on a number.
+\item Some scholarly search services were rate-limited or failed, so recent papers may be missing. SSRN blocked direct access for some ETF entries.
+\item DTCC, CME, Cboe and BIS data pages could not be fully confirmed.
+\item This is not a PRISMA systematic review. No meta-analysis was run.
+\item AI tools found, read and summarised these sources. A person should check any citation before external use.
+\end{itemize}
+
+\appendix
+\section{Annotated bibliography}
+\small
+\input{bib_entries.tex}
+\end{document}

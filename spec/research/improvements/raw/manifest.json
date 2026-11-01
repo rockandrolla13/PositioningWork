@@ -1,0 +1,713 @@
+[
+ {
+  "name": "cftc_legacy_futures_TU",
+  "fetched_utc": "2026-11-01T19:01:34+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_TU.csv",
+  "sha256": "6d89247e30705b7447d33598a46d2d33de0bc26bc7abcc5f3065824b0e90c014",
+  "rows": 1399,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_TU",
+  "fetched_utc": "2026-11-01T19:01:38+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_TU.csv",
+  "sha256": "a9f3fffd7d4e232cc652336302f54999885a221d72d4f4b7645992a00ff38e78",
+  "rows": 1399,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_TU",
+  "fetched_utc": "2026-11-01T19:01:39+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_TU.csv",
+  "sha256": "b1caacbc2469376efda39576cef2025b6a3f2e5e563ef42180a2cb330753055f",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_TU",
+  "fetched_utc": "2026-11-01T19:01:40+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_TU.csv",
+  "sha256": "d528d44e5e0d90df2402c2a7d7d56817157ca85394fc9e34d20f1c668a6ea92f",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_FV",
+  "fetched_utc": "2026-11-01T19:01:41+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_FV.csv",
+  "sha256": "91f91baae6aeeb62ecb9ddf10741ea76a923add021bd6fb424883ddf6078f82f",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_FV",
+  "fetched_utc": "2026-11-01T19:01:42+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_FV.csv",
+  "sha256": "cca72907ba55d1e58d80d00e214c7e889a149b1f4ba5531a46f69e679c7e3238",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_FV",
+  "fetched_utc": "2026-11-01T19:01:43+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_FV.csv",
+  "sha256": "81d921bc4955afa1a8d35cc5bdeb927bb927e2b164381294ae8cc5a0517b4bf7",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_FV",
+  "fetched_utc": "2026-11-01T19:01:45+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_FV.csv",
+  "sha256": "9037f9c39280b8cbc6b4d023a7ccb0db8a009827647dab2db6d0be94e1fe87c4",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_TY",
+  "fetched_utc": "2026-11-01T19:01:46+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_TY.csv",
+  "sha256": "5ccfeed66ce4535ff891671d4d7af5dd51599224ded31b9eb11513ef5562813b",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_TY",
+  "fetched_utc": "2026-11-01T19:01:47+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_TY.csv",
+  "sha256": "4454614c0aa8659fafda7c01ffbc5d128a28de24209d3f886b71da3ae7e3a034",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_TY",
+  "fetched_utc": "2026-11-01T19:01:48+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_TY.csv",
+  "sha256": "059c65b704bf566f0259b83b3494625c40c500addce4a50753d8c3a76ab560d7",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_TY",
+  "fetched_utc": "2026-11-01T19:01:49+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_TY.csv",
+  "sha256": "7b670e2f0e349928baa348dabb3fca2c5ded410b6e4515479c500dca5af42431",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_TN",
+  "fetched_utc": "2026-11-01T19:01:49+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_TN.csv",
+  "sha256": "6e7b57cff3e9145a428c4729c520b229df5d82f11805ff7dfd691392793d0030",
+  "rows": 554,
+  "first": "2016-03-08",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_TN",
+  "fetched_utc": "2026-11-01T19:01:50+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_TN.csv",
+  "sha256": "bc2a9c0cc0c1b7de4a8755fae6d634312bac860737418859f0958a10c4c7243c",
+  "rows": 554,
+  "first": "2016-03-08",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_TN",
+  "fetched_utc": "2026-11-01T19:01:51+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_TN.csv",
+  "sha256": "cb8106bd03f8b88ba6682480ae3977c715007390289546ba276eca9f937cbdc9",
+  "rows": 554,
+  "first": "2016-03-08",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_TN",
+  "fetched_utc": "2026-11-01T19:01:52+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_TN.csv",
+  "sha256": "005d9f16ecb574f2502f7298ef0b3abd798f9e3bcdf797967993dc46626b3f23",
+  "rows": 554,
+  "first": "2016-03-08",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_US",
+  "fetched_utc": "2026-11-01T19:01:55+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_US.csv",
+  "sha256": "de73b79d0a9cfd90e885b5bffbdc6b75381fb43370fe5c24d0c30f0952689836",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_US",
+  "fetched_utc": "2026-11-01T19:01:56+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_US.csv",
+  "sha256": "838957ad58db5495bff778c13a88393bd53cc096a23579fa3c4bb3ea6c46fa1d",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_US",
+  "fetched_utc": "2026-11-01T19:01:56+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_US.csv",
+  "sha256": "6aa5cbd5b6166f0ed29d5da7aa36973fdc1013a938dba27c587656649377e54d",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_US",
+  "fetched_utc": "2026-11-01T19:01:57+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_US.csv",
+  "sha256": "25ff87c8e10ae072e5330396d618074b383fc688b78564e030fc9b41fe66cf09",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_WN",
+  "fetched_utc": "2026-11-01T19:01:58+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_WN.csv",
+  "sha256": "37a0a39ed438b016975419c3744fadb7ab02d0202d4bb63936bbf5aca6cc4b3e",
+  "rows": 870,
+  "first": "2010-03-02",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_WN",
+  "fetched_utc": "2026-11-01T19:02:00+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_WN.csv",
+  "sha256": "c9eec1dfdd29a095230146ef0c67c8f188507cd7fc12e723b74e20610d0f8d7b",
+  "rows": 870,
+  "first": "2010-03-02",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_WN",
+  "fetched_utc": "2026-11-01T19:02:00+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_WN.csv",
+  "sha256": "481a3283bd09da3a7882d07190516173c4a69790680cd6c84694bc2ab418f1f3",
+  "rows": 870,
+  "first": "2010-03-02",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_WN",
+  "fetched_utc": "2026-11-01T19:02:02+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_WN.csv",
+  "sha256": "336ad202f463e2b2c2fdfc1fc62ade451f46b0daf12eaa52268c2e71857acac6",
+  "rows": 870,
+  "first": "2010-03-02",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_EC",
+  "fetched_utc": "2026-11-01T19:02:07+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_EC.csv",
+  "sha256": "3bdb983818566b512b875e378604f83a99eaf79c34234d84a2159cfaace4f292",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_EC",
+  "fetched_utc": "2026-11-01T19:02:08+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_EC.csv",
+  "sha256": "1b15568ebce6b992a0b9c648d10e0ba7680cea09066a81a8bf502ac395597abd",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_EC",
+  "fetched_utc": "2026-11-01T19:02:09+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_EC.csv",
+  "sha256": "ed35c3063ed754bee94f0d40c9863fe2b9f59ce5658b1aa661e7c5fdf6f6a5db",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_EC",
+  "fetched_utc": "2026-11-01T19:02:10+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_EC.csv",
+  "sha256": "f9a5cce9e9e90e1cd381da2283e4d076e7883c2b1549482e1f1961caff326c5e",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_JY",
+  "fetched_utc": "2026-11-01T19:02:11+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_JY.csv",
+  "sha256": "4332fc46efb04a082656f59ebfecf00831461adc862a7821fcabad9bf4ba6f0b",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_JY",
+  "fetched_utc": "2026-11-01T19:02:14+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_JY.csv",
+  "sha256": "c7153a33bccc80da5cb47e4d225f9351c9a7ca2fdb74428ca9bf529690cbcc81",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_JY",
+  "fetched_utc": "2026-11-01T19:02:16+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_JY.csv",
+  "sha256": "4672046605603a5fd9b89303690d4a0867ed60ffed40db92b6f133a5c7365fee",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_JY",
+  "fetched_utc": "2026-11-01T19:02:17+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_JY.csv",
+  "sha256": "973d80afcf7eb831ec4e72b0a2e1a7388f65cd8f7e9fb8c37e488c35eea205a2",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_BP",
+  "fetched_utc": "2026-11-01T19:02:19+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_BP.csv",
+  "sha256": "bf832e5afe87da2f10b053954fb4f9629b35ddc37b93586bbdba7c2cb407ff93",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_BP",
+  "fetched_utc": "2026-11-01T19:02:20+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_BP.csv",
+  "sha256": "13846320ecd014b0f2547fd32676a095b7580f8bfb28d75b37ef2c4cc8cc530a",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_BP",
+  "fetched_utc": "2026-11-01T19:02:21+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_BP.csv",
+  "sha256": "4ce2406605d43da64fe7315828b2a70ae243a34d4a380ad30c042da88d67ad8a",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_BP",
+  "fetched_utc": "2026-11-01T19:02:22+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_BP.csv",
+  "sha256": "8011608990253c2277a08ccdb3d4e9909295234aba77c1406221e4d2af0b6340",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_AD",
+  "fetched_utc": "2026-11-01T19:02:23+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_AD.csv",
+  "sha256": "5a46c92ffc380912d1afe64a7461b0ae3aeff8ad6633d5e7c86f90058b36f8be",
+  "rows": 1373,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_AD",
+  "fetched_utc": "2026-11-01T19:02:24+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_AD.csv",
+  "sha256": "d47061e2dfbb49b9aa26cef4e75ddba0befdbddf6f9fbaafce1ca093ca7937ac",
+  "rows": 1374,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_AD",
+  "fetched_utc": "2026-11-01T19:02:25+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_AD.csv",
+  "sha256": "80907d4e5307a337b011d45a4a9c4b9e236d1568eac1e1ec061911806f403e48",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_AD",
+  "fetched_utc": "2026-11-01T19:02:28+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_AD.csv",
+  "sha256": "44aea98cd70eb68c3b63484d2ef960efd9f9f1a89caec4f5c06f447950fdcaf7",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_CD",
+  "fetched_utc": "2026-11-01T19:02:30+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_CD.csv",
+  "sha256": "8ec9bd42d3ef9c2434012e336a2e8be9e6230514b40a79f2bdc567f95cb14207",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_CD",
+  "fetched_utc": "2026-11-01T19:02:32+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_CD.csv",
+  "sha256": "0bfe2b4069dffc5868630678a35e452193eb866107306bb40c75324f117226f9",
+  "rows": 1400,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_CD",
+  "fetched_utc": "2026-11-01T19:02:33+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_CD.csv",
+  "sha256": "e8ca6cff7d13c7af55d8327989a1180260e87da64bc7d5cf5e956ca7e25f2f5a",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_CD",
+  "fetched_utc": "2026-11-01T19:02:34+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_CD.csv",
+  "sha256": "62850bdcfb6eded4d5c1ff9ef4e4bc99e377fed4a10e380787d6568f9a009786",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_SF",
+  "fetched_utc": "2026-11-01T19:02:35+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_SF.csv",
+  "sha256": "21ec9109c8824867330d04f6259777ed494f4096713d2e07ebf62d5d124cd616",
+  "rows": 1398,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_SF",
+  "fetched_utc": "2026-11-01T19:02:36+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_SF.csv",
+  "sha256": "0d10c92383dfb3c01da296a1d67da24ebfa3b9fa7aafe650f2fb0ca4aa69a1b4",
+  "rows": 1398,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_SF",
+  "fetched_utc": "2026-11-01T19:02:37+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_SF.csv",
+  "sha256": "168b16bbbb1989ef1c5e69473453631fe422c3afdbbc46294ff28c9f69858e20",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_SF",
+  "fetched_utc": "2026-11-01T19:02:39+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_SF.csv",
+  "sha256": "1854b96afaa3458d05267311e57f20139d1c0eafdeb41717e7ad304c7dfc1c62",
+  "rows": 1064,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_futures_NE",
+  "fetched_utc": "2026-11-01T19:02:42+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_futures_NE.csv",
+  "sha256": "3e91b929b4ccaa48393542add697842da924394bb0e136833c35668016cfe2bc",
+  "rows": 1119,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_legacy_combined_NE",
+  "fetched_utc": "2026-11-01T19:02:46+00:00",
+  "status": "ok",
+  "file": "cftc_legacy_combined_NE.csv",
+  "sha256": "bfa5e6c5e2ef565935324933fa1ea0be339e20bb0bb60775a1ead7b254ef7d5a",
+  "rows": 1119,
+  "first": "2000-01-04",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_futures_NE",
+  "fetched_utc": "2026-11-01T19:02:47+00:00",
+  "status": "ok",
+  "file": "cftc_tff_futures_NE.csv",
+  "sha256": "4856204350dba853c6ef606c9c86f977261075d9520bfb5a8969d70d0f22f7e0",
+  "rows": 1061,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "cftc_tff_combined_NE",
+  "fetched_utc": "2026-11-01T19:02:48+00:00",
+  "status": "ok",
+  "file": "cftc_tff_combined_NE.csv",
+  "sha256": "01e65d6e986bcbb039a891bed8bc6e1d99d9bb047d2160bb156fc0ff3d7b5ac2",
+  "rows": 1061,
+  "first": "2006-06-13",
+  "last": "2026-10-27"
+ },
+ {
+  "name": "fred_DGS2",
+  "fetched_utc": "2026-11-01T19:02:48+00:00",
+  "status": "ok",
+  "file": "fred_DGS2.csv",
+  "sha256": "c8f31fa13a07c4e43856bb90975a3525b11db0639878c0325ce0fc671ede9acd",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DGS5",
+  "fetched_utc": "2026-11-01T19:02:48+00:00",
+  "status": "ok",
+  "file": "fred_DGS5.csv",
+  "sha256": "df2c5c1f34e83986082bd7c3853af863893e13f840c2865c8d2eef21f66fb476",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DGS7",
+  "fetched_utc": "2026-11-01T19:02:49+00:00",
+  "status": "ok",
+  "file": "fred_DGS7.csv",
+  "sha256": "06115b18b4e735fc6e79c0ed8946d2fc8823c6a32c5a2259e08cda163479b66f",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DGS10",
+  "fetched_utc": "2026-11-01T19:02:49+00:00",
+  "status": "ok",
+  "file": "fred_DGS10.csv",
+  "sha256": "797fb8daecd7062f49fae539eb43cb430bda8b55e18d8b770d481f74df4069f9",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DGS20",
+  "fetched_utc": "2026-11-01T19:02:49+00:00",
+  "status": "ok",
+  "file": "fred_DGS20.csv",
+  "sha256": "7adbc607d4e2d48f5acc8f02dc1311a972ed17c7a877d1ca6260499fb5e9c4f8",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DGS30",
+  "fetched_utc": "2026-11-01T19:02:49+00:00",
+  "status": "ok",
+  "file": "fred_DGS30.csv",
+  "sha256": "12ad5c715071aff7d1fd5083e03a36e0510cce103b32d2aa7dee7d2efffeb5fd",
+  "rows": 6999,
+  "first": "2000-01-03",
+  "last": "2026-10-29"
+ },
+ {
+  "name": "fred_DEXUSEU",
+  "fetched_utc": "2026-11-01T19:02:50+00:00",
+  "status": "ok",
+  "file": "fred_DEXUSEU.csv",
+  "sha256": "775fff1ca92c5d5334ad736016ed28cae9d4ef389af19b0ad38cc92d2ef6426a",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXJPUS",
+  "fetched_utc": "2026-11-01T19:02:50+00:00",
+  "status": "ok",
+  "file": "fred_DEXJPUS.csv",
+  "sha256": "e2ab1a307c66c087ec674d37e2554417677f7a5b355bdb73c36987c17bb3cbe6",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXUSUK",
+  "fetched_utc": "2026-11-01T19:02:50+00:00",
+  "status": "ok",
+  "file": "fred_DEXUSUK.csv",
+  "sha256": "281ef4ab012d0914a9c8922e73ef14b85da4df4bfb086bd85b929c096ac0ed8a",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXUSAL",
+  "fetched_utc": "2026-11-01T19:02:51+00:00",
+  "status": "ok",
+  "file": "fred_DEXUSAL.csv",
+  "sha256": "fb2452969023a7e632497e0466068e8626d43a221f89f26bbd1993876ea1e025",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXCAUS",
+  "fetched_utc": "2026-11-01T19:02:51+00:00",
+  "status": "ok",
+  "file": "fred_DEXCAUS.csv",
+  "sha256": "6b82133aecfb754556ac9c8f095e8e162714a03b1168b4f30fdb1b2b2035d31d",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXSZUS",
+  "fetched_utc": "2026-11-01T19:02:51+00:00",
+  "status": "ok",
+  "file": "fred_DEXSZUS.csv",
+  "sha256": "20caef95128b3f0a9a2d4c53684384a22479f211af265fad30a012f0360b9c35",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "fred_DEXUSNZ",
+  "fetched_utc": "2026-11-01T19:02:52+00:00",
+  "status": "ok",
+  "file": "fred_DEXUSNZ.csv",
+  "sha256": "fed12ba8d1331063e4213524eaf881009688188024ea291adfe3fe4be4d198b8",
+  "rows": 6995,
+  "first": "2000-01-03",
+  "last": "2026-10-23"
+ },
+ {
+  "name": "yahoo_TU",
+  "fetched_utc": "2026-11-01T19:02:52+00:00",
+  "status": "ok",
+  "file": "yahoo_TU.csv",
+  "sha256": "b43ed6ef47603da2c17a0cde88f408f6250889ecd194aa4d44df9dc3b50d8549",
+  "rows": 6623,
+  "first": "2000-06-02",
+  "last": "2026-10-30"
+ },
+ {
+  "name": "yahoo_FV",
+  "fetched_utc": "2026-11-01T19:02:52+00:00",
+  "status": "ok",
+  "file": "yahoo_FV.csv",
+  "sha256": "872eb7555ab8055747f3df7dc3a79a0ba1b497f51f9bed3ef81ae55b8dc6980e",
+  "rows": 6569,
+  "first": "2000-09-21",
+  "last": "2026-10-30"
+ },
+ {
+  "name": "yahoo_TY",
+  "fetched_utc": "2026-11-01T19:02:52+00:00",
+  "status": "ok",
+  "file": "yahoo_TY.csv",
+  "sha256": "25c840c8d8bf43d3858b2942a9acaeaa8b5a58f91e37053cc5b9d3e53e484984",
+  "rows": 6557,
+  "first": "2000-09-21",
+  "last": "2026-10-30"
+ },
+ {
+  "name": "yahoo_US",
+  "fetched_utc": "2026-11-01T19:02:53+00:00",
+  "status": "ok",
+  "file": "yahoo_US.csv",
+  "sha256": "ff4175993b3996191fb5e5355f8d3b0bfbe735f6aa20bccb40323db0a6cf9c18",
+  "rows": 6563,
+  "first": "2000-09-21",
+  "last": "2026-10-30"
+ },
+ {
+  "name": "cftc_special_announcements",
+  "fetched_utc": "2026-11-01T19:02:53+00:00",
+  "status": "ok",
+  "file": "cftc_special_announcements.html",
+  "sha256": "ba0e4600f403c59d4337c76507fe2178316fcda3e85458e494464d79535cc0a8"
+ },
+ {
+  "name": "project_treasury_futures_dv01.csv",
+  "fetched_utc": "2026-11-01T19:02:53+00:00",
+  "status": "ok",
+  "file": "project_treasury_futures_dv01.csv",
+  "sha256": "f8bc85e4170a36b27eb2194aceeb0227f14da1bfdea81b1a9e09169e23c1c9c0"
+ },
+ {
+  "name": "project_ty_daily.csv",
+  "fetched_utc": "2026-11-01T19:02:53+00:00",
+  "status": "ok",
+  "file": "project_ty_daily.csv",
+  "sha256": "6fa4b57ce1d6b69bf99f49123b390ecbc1f7e8247bac02bb8fe3f365127a16f2"
+ }
+]

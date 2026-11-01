@@ -1,0 +1,234 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb,booktabs,tabularx,enumitem,array,hyperref,microtype}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\title{Positioning Embeddings, Attention and LightGBM:\\ Methodology}
+\author{PositioningWork project}
+\date{1 November 2026}
+\begin{document}
+\maketitle
+
+\textbf{Status: a design only. Nothing here is built or tested.} All sizes and settings are proposals. The design has no published precedent that we found. The evidence so far is weak: no positioning signal has passed an out-of-sample test in our studies. So every step must earn its place against a simpler model.
+
+\section*{Summary}
+\begin{enumerate}
+\item Turn positioning into features, keeping the full shape of the ledger, not one Pain number.
+\item Test those features with ridge regression.
+\item Test them with a small LightGBM (LGBM) model.
+\item Add one small attention layer, freeze it, and pass its outputs to LGBM.
+\item Keep a step only if it beats the step before it, out of sample.
+\end{enumerate}
+
+\textbf{Why attention at all.} The literature suggests that a loss matters when it meets a binding limit, and that holder type can change the sign (Siriwardane 2019; Ellul et al.\ 2015; Kang et al.\ 2020; Fang 2024). Attention lets market state decide which reading to trust. LGBM can also learn such interactions, so attention may add nothing. Step 4 tests that.
+
+\section{Notation and data}
+A \emph{unit} $u$ is what we forecast, such as a bond, an issuer, a sector and maturity bucket, an ETF or an index. Time $t$ is weekly. Every input must be known at $t$. Each feature carries the date it became available.
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lLL@{}}
+\toprule
+Market & Available positioning inputs & Limit on this method \\
+\midrule
+TRACE & Customer buys and sells by bond & One holder group only, so attention can only weigh measures. Our pilot panel has 12 issuers and 123 weeks, and it is not point-in-time. \\
+RFQ (work machine) & Anonymous side, size and level, from one dealer & No client view. Use buckets. Any signal must beat a vendor mark. \\
+Credit ETFs & Shares, NAV, FINRA short interest & Share count is not a position. Prefer baskets and premiums if available. \\
+Credit futures & CFTC holder groups & About 25 reports. Monitor only. Do not train. \\
+CDX & Prices, volumes, skew, cleared totals & No public holder data. Proxies only. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Step 1: features}
+\subsection{The ledger-shape embedding}
+This is the main new feature. For holder group $g$ and unit $u$, build the lot ledger from net flow, with pro-rata removal. Entry level is the trade's spread, or total-return price for an ETF. For each open long lot $\ell$, compute its distance from today, in volatility units:
+\[
+D_\ell = \frac{s_t - s_\ell}{\sigma_t} \quad\text{for spreads}, \qquad
+D_\ell = \frac{P_\ell - P_t}{\sigma_t} \quad\text{for prices}.
+\]
+A positive distance means the lot is under water. Short lots use the opposite sign. $\sigma_t$ is the standard deviation of weekly changes over the past 26 weeks.
+
+Place the lots in 16 bins, with edges from $-3.5$ to $+3.5$ in steps of $0.5$, plus two open ends. Each bin holds that bin's share of open quantity:
+\[
+h_{b} = \frac{\sum_{\ell \in b} q_\ell}{\sum_{\ell} q_\ell}, \qquad \sum_b h_b = 1 .
+\]
+Pain share and depth are summaries of $\mathbf{h}$. So $\mathbf{h}$ keeps everything they hold, and more.
+
+\textbf{Rules.}
+\begin{itemize}
+\item If open quantity is $10^{-6}$ or less, mark the row missing. Add a missing flag.
+\item Always add coverage, which is open quantity over the amount outstanding or shares.
+\item Starting positions are unknown, so read $\mathbf{h}$ as the shape of recent flow, not of all holders.
+\item Run one test with Grinblatt and Han (2005) turnover decay, which also retires lots with volume. Our current ledger does not do this.
+\end{itemize}
+
+\subsection{Other readings}
+Build these measures per group where the data allows.
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Measure & Source in the spec \\
+\midrule
+Net position scaled & I1, I3 \\
+Range position & I2 sentiment index, if history allows \\
+Flow trend & TAARSS from I13 \\
+Filtered residual & I5 \\
+Directional short interest & ETFs only, following Evans et al.\ (2026) \\
+\bottomrule
+\end{tabular}
+\end{center}
+Standardise each reading $x$ with an expanding mean and standard deviation, known at $t$. Clip it at $\pm 3$.
+
+\subsection{Market state}
+The state vector $\mathbf{s}_t$ has five inputs, all standardised: spread level, spread volatility, past 26-week spread change, a dealer capacity proxy, and a funding stress proxy. Choose and freeze the two proxies before any test.
+
+\subsection{Target}
+The target is the future spread change over $H$ weeks, for $H \in \{1, 4, 13\}$, less the change in the unit's market bucket. Start with $H=4$. Use spreads or excess returns, not price, because rates and pull-to-par distort price. Follow Dickerson et al.\ on bond data: avoid one-sided filters and allow for price error.
+
+\section{Step 2: ridge}
+Fit ridge regression on $\mathbf{h}$ for each group, the other readings, and $\mathbf{s}_t$. Choose the penalty inside the training data. This model tells you whether any linear signal exists. If it does not beat the benchmarks in Section~\ref{sec:eval}, record that, and treat steps 3 and 4 as exploratory.
+
+\section{Step 3: LightGBM}
+Use the same inputs. Add hand-built interactions, such as depth $\times$ dealer capacity, and depth by holder group. This is the simple alternative to attention, and it has far less leakage risk.
+
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Setting & Proposed value \\
+\midrule
+Maximum depth, leaves & 3, up to 8 \\
+Minimum rows per leaf & 5\% of training rows \\
+Learning rate & 0.02, with early stopping on a later block \\
+Feature fraction & 0.5 \\
+L2 penalty & 10 \\
+Row weights & Each week sums to 1, so busy weeks do not dominate \\
+Splits & By whole weeks, never by row \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Step 4: attention}
+\subsection{The layer}
+Each token $i$ is one reading, with holder group $g_i$ and measure $m_i$. Its tag, in $d = 8$ dimensions, is learned:
+\[
+\mathbf{e}_i = \mathbf{e}^{G}_{g_i} + \mathbf{e}^{M}_{m_i}.
+\]
+The query comes from market state:
+\[
+\mathbf{q}_t = \mathbf{W}\mathbf{s}_t + \mathbf{c}.
+\]
+The attention weights and the output are:
+\[
+a_{i,t} = \frac{\exp(\mathbf{q}_t^\top \mathbf{e}_i / \tau)}{\sum_j \exp(\mathbf{q}_t^\top \mathbf{e}_j / \tau)},
+\qquad
+z_{u,t} = \sum_i a_{i,t}\, b_{g_i,m_i}\, x_{i,u,t} .
+\]
+The ledger shape enters as a single reading per group, $x = \mathbf{w}^\top \mathbf{h}$, with one vector $\mathbf{w}$ shared across groups. Set $\tau = 1$.
+
+\textbf{Why the signed loadings $b$.} Weights $a$ are always positive. Without $b$, the layer could not let insurers and levered holders carry opposite signs.
+
+\subsection{Training}
+A small linear head forecasts the target:
+\[
+\hat{y}_{u,t} = \beta_0 + \beta z_{u,t} + \boldsymbol{\gamma}^\top \mathbf{s}_t .
+\]
+Minimise Huber loss, plus an L2 penalty on all parameters, plus a small penalty for over-concentrated weights. Use Adam, whole-week batches and early stopping on a later block. Use three random seeds, and average the frozen outputs.
+
+\subsection{Size limit}
+With 3 groups, 5 measures, 16 bins and 5 state inputs, the layer has about 150 parameters:
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Part & Parameters \\
+\midrule
+Tags, $(3+5)\times 8$ & 64 \\
+Query, $5\times 8 + 8$ & 48 \\
+Signed loadings, $3\times 5$ & 15 \\
+Ledger-shape vector & 16 \\
+Head, $1 + 1 + 5$ & 7 \\
+\midrule
+Total & 150 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Do not exceed this without new evidence. Use one head and one layer.
+
+\subsection{Passing it to LGBM}
+LGBM cannot train the layer, because trees pass no gradients back. So freeze the layer, then export these columns:
+\begin{enumerate}
+\item The weights $a_{i,t}$.
+\item The output $z_{u,t}$.
+\item The weight entropy $-\sum_i a_{i,t}\ln a_{i,t}$, which shows whether one reading dominates.
+\end{enumerate}
+Add these to the inputs from Step 3. Do not export $\hat{y}$ as well, as it adds little beyond $z$ and $\mathbf{s}_t$.
+
+\section{Preventing leakage}
+This is the main risk. If attention trains on the weeks LGBM learns from, its columns carry those weeks' targets, and LGBM will look far better than it is.
+
+\begin{enumerate}
+\item Set a final holdout before any fit. No model or choice touches it until the end.
+\item Use an expanding walk-forward, refitting yearly. Everything fits only on data before the cut.
+\item Inside each training window, split the weeks into five contiguous blocks.
+\item For each block, fit attention on the other blocks, and write its columns for that block. Remove $H$ weeks on each side of the block first. These out-of-fold columns are LGBM's training inputs.
+\item Then fit attention on the whole training window. Use that fit to write the columns for test weeks.
+\item Leave a gap of $H$ weeks between training data and test data.
+\item Compute all standardising, binning and volatility on past data only.
+\item TRACE in our warehouse is not point-in-time. Label results from it as provisional.
+\end{enumerate}
+
+\section{Evaluation}\label{sec:eval}
+\subsection{The ladder}
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Model & Inputs & Question \\
+\midrule
+B0 & Spread level and past spread change & The bar to beat \\
+M1 & Ridge on all features & Is there linear signal? \\
+M2 & LGBM on the same features, plus hand-built interactions & Do interactions help? \\
+M3 & M2 plus frozen attention columns & Does attention add anything? \\
+\bottomrule
+\end{tabular}
+\end{center}
+Each model must beat the one before it. The plain spread level had $t=5.93$ on LQD and $12.51$ on HYG at 26 weeks in our ETF study, so B0 is a demanding bar.
+
+\subsection{Statistics}
+\begin{itemize}
+\item Primary measure: weekly cross-sectional rank correlation with the target, averaged over time. Use Newey-West errors with lag at least $H-1$.
+\item Few issuers means weak clustering. Use a wild cluster bootstrap by issuer and date.
+\item Report effective independent observations for each horizon.
+\item Placebos: circularly shift flow within each unit, and shuffle holder labels. M3 must beat both.
+\item Apply a Holm correction across all models, horizons and markets. Report raw and adjusted p-values.
+\item Report a net result, after stated costs, for any trading claim.
+\end{itemize}
+
+\subsection{Checks that attention means something}
+\begin{enumerate}
+\item Weights should be stable across seeds and yearly refits. If they are not, do not read them.
+\item Check whether weights shift sensibly in known stress, without using that check to tune the model.
+\item Compare SHAP importance for attention columns against the placebo versions.
+\end{enumerate}
+
+\subsection{Stop rules}
+\begin{enumerate}
+\item If M1 and M2 fail against B0, stop. Attention cannot create information that the inputs lack.
+\item If M3 does not beat M2 out of sample, drop attention and keep the simpler model.
+\item If weights are unstable, drop attention even if M3 scores slightly better.
+\item Do not widen the search after seeing the holdout.
+\end{enumerate}
+
+\section{Order of work}
+\begin{enumerate}
+\item The TRACE pilot passed 0 of 48 tests on 12 large issuers, and flow looked like noise. So do not start on that panel. Start only on a much larger one.
+\item Build $\mathbf{h}$ on TRACE, then run B0 and M1.
+\item If M1 passes, run M2.
+\item If M2 passes, run M3 on a larger sample. Our current TRACE panel is too small to train attention reliably, with 123 weeks and 12 issuers. Treat any M3 result on it as exploratory.
+\item Repeat the ladder on work-machine RFQ data, using buckets.
+\end{enumerate}
+
+\section*{Sources}
+Full citations and reading levels are in \texttt{../literature/literature\_review.pdf}. The ledger, measures and their recipes are in \texttt{../../positioning\_spec.pdf}.
+\end{document}

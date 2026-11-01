@@ -1,0 +1,32 @@
+step fetch_fred
+step fetch_ssga
+step fetch_finra
+step fetch_cftc
+step fetch_prices
+step fetch_ishares
+LQD {'status': 'live', 'rows': 6112, 'first': 20020722, 'last': 20261030}
+HYG {'status': 'live', 'rows': 4928, 'first': 20070404, 'last': 20261030}
+IGSB {'status': 'live', 'rows': 4990, 'first': 20070105, 'last': 20261030}
+IGIB {'status': 'live', 'rows': 4990, 'first': 20070105, 'last': 20261030}
+USIG {'status': 'live', 'rows': 4991, 'first': 20070105, 'last': 20261030}
+USHY {'status': 'live', 'rows': 2268, 'first': 20171025, 'last': 20261030}
+FALN {'status': 'live', 'rows': 2613, 'first': 20160614, 'last': 20261030}
+EMB {'status': 'live', 'rows': 4752, 'first': 20071217, 'last': 20261030}
+LQDH {'status': 'live', 'rows': 3130, 'first': 20140527, 'last': 20261030}
+HYGH {'status': 'live', 'rows': 3130, 'first': 20140527, 'last': 20261030}
+SHYG {'status': 'live', 'rows': 3283, 'first': 20131015, 'last': 20261030}
+step fetch_duration_points
+/media/ak/10E1026C4FA6006E/GitRepos/PositioningWork/spec/research/credit_etf/01_fetch_data.py:128: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`).Please use a specific unit instead.
+  stamp = (pd.Timestamp(date) - pd.Timedelta(days=back)).strftime("%Y%m%d")
+LQD duration points 38
+HYG duration points 38
+IGSB duration points 20
+IGIB duration points 20
+USIG duration points 20
+USHY duration points 10
+FALN duration points 11
+EMB duration points 20
+LQDH duration points 13
+HYGH duration points 13
+SHYG duration points 14
+done

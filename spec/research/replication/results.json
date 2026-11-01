@@ -1,0 +1,480 @@
+{
+ "P1": {
+  "verdict": "Specified",
+  "evidence": {
+   "numeric_tokens_in_note": [
+    "16,",
+    "2014",
+    "3",
+    "1",
+    "2",
+    "3",
+    "30",
+    "30",
+    "30",
+    "30",
+    "30",
+    "30",
+    "30-",
+    "1"
+   ],
+   "reason": "The one page holds only its date, the 30-day window and list numbers. It prints no output."
+  }
+ },
+ "P2": {
+  "verdict": "Specified",
+  "evidence": {
+   "reason": "The deck's line is the legacy survival share, so no source output exists for the corrected formula.",
+   "best_share_formula_inside_band": 0.5402843601895735,
+   "best_share_formula_last": 0.25847720421732795
+  }
+ },
+ "P3_extra": {
+  "verdict": "Verified",
+  "evidence": {
+   "deck_line_recipe": {
+    "basis": "combined",
+    "window": 30,
+    "formula": "legacy_pct_open",
+    "inside_band": 0.798828125,
+    "corr_point": 0.7626318337160465,
+    "last": 1.0
+   },
+   "printed_readout": 1.0,
+   "variants": 50
+  }
+ },
+ "I4": {
+  "verdict": "Partial",
+  "evidence": {
+   "variants_total": 63893,
+   "chart_range": [
+    -0.934,
+    0.758
+   ],
+   "tuesday_dgs10_range": [
+    -0.8400000000000003,
+    0.69
+   ],
+   "base_rate": {
+    "sample": "2009-06-02 to 2018-01-30",
+    "rally_strict": 0.5077262693156733,
+    "rally_with_ties": 0.5364238410596026
+   },
+   "uncond_best": {
+    "k": 1.0,
+    "start": "2009-06-01",
+    "end": "2018-01-31",
+    "rmse_ex1": 0.024874637124407534,
+    "rmse_ex2": 0.027601235188095954,
+    "n": 453
+   },
+   "uncond_by_sampling": [
+    {
+     "series": "weekly_dow1",
+     "start": "2009-06-01",
+     "end": "2018-01-31",
+     "rmse": 0.025,
+     "rally": 0.508,
+     "rally_le": 0.536
+    },
+    {
+     "series": "daily_19d",
+     "start": "2009-10-01",
+     "end": "2017-09-30",
+     "rmse": 0.051,
+     "rally": 0.52,
+     "rally_le": 0.544
+    },
+    {
+     "series": "weekly_dow2",
+     "start": "2011-04-01",
+     "end": "2017-09-30",
+     "rmse": 0.053,
+     "rally": 0.528,
+     "rally_le": 0.543
+    },
+    {
+     "series": "weekly_dow0",
+     "start": "2009-02-01",
+     "end": "2019-01-31",
+     "rmse": 0.054,
+     "rally": 0.511,
+     "rally_le": 0.521
+    },
+    {
+     "series": "daily_20d",
+     "start": "2009-10-01",
+     "end": "2017-12-31",
+     "rmse": 0.056,
+     "rally": 0.515,
+     "rally_le": 0.535
+    },
+    {
+     "series": "wavg_fri",
+     "start": "2009-10-01",
+     "end": "2017-09-30",
+     "rmse": 0.059,
+     "rally": 0.514,
+     "rally_le": 0.538
+    },
+    {
+     "series": "daily_22d",
+     "start": "2011-03-01",
+     "end": "2017-09-30",
+     "rmse": 0.059,
+     "rally": 0.528,
+     "rally_le": 0.548
+    },
+    {
+     "series": "daily_21d",
+     "start": "2011-03-01",
+     "end": "2017-09-30",
+     "rmse": 0.063,
+     "rally": 0.52,
+     "rally_le": 0.541
+    },
+    {
+     "series": "weekly_dow3",
+     "start": "2010-01-01",
+     "end": "2017-08-31",
+     "rmse": 0.064,
+     "rally": 0.52,
+     "rally_le": 0.53
+    },
+    {
+     "series": "weekly_dow4",
+     "start": "2006-06-01",
+     "end": "2019-01-31",
+     "rmse": 0.088,
+     "rally": 0.519,
+     "rally_le": 0.543
+    }
+   ],
+   "rate_matches_within_1pt": 14,
+   "rate_matches_within_2pt_and_range": 0,
+   "best_in_pinned_sample": {
+    "basis": "combined",
+    "contracts": "4",
+    "weight": "contracts",
+    "start": "2009-06-01",
+    "end": "2018-01-31",
+    "n": 449,
+    "n_buy": 61,
+    "n_sell": 68,
+    "base": 0.5367483296213809,
+    "buy": 0.5901639344262295,
+    "sell": 0.45588235294117646,
+    "rm_uncond": 0.024771330467869262,
+    "rm_buy": 0.2524825821849084,
+    "rm_sell": 0.21758986920822931,
+    "rm_cond": 0.23568284355125785,
+    "rate_gap": 0.03983606557377051
+   },
+   "best_cond_rmse": 0.1181949068959082
+  }
+ },
+ "I6": {
+  "verdict": "Partial",
+  "evidence": {
+   "centre_ex3": {
+    "h": 63,
+    "rmse": 0.0006047818058159607,
+    "corr": 0.9996538743102515
+   },
+   "half_width_ex3": {
+    "scale": "expanding_sd",
+    "k_fit": 0.8462276631021216,
+    "rmse": 0.0001173970071086206,
+    "rmse_k085": 0.00017965569670316893,
+    "corr": 0.9994363713983377
+   },
+   "ex4_unfitted": {
+    "k_fit": 1.241731567081865,
+    "printed_k": 1.25,
+    "corr": 0.9986978606412807,
+    "centre_h63_corr": 0.9998065484138969
+   },
+   "band_rebuild": {
+    "lag": 0,
+    "adjust": true,
+    "rmse_upper": 0.0006900305335721098,
+    "rmse_lower": 0.0005656255534768742,
+    "corr_upper": 0.9995510431645559,
+    "corr_lower": 0.9997045701748231
+   },
+   "stats_best": {
+    "start": "2010-04-01",
+    "lag": 1,
+    "horizon": 21,
+    "tol": 0.0,
+    "n_sell": 186,
+    "n_buy": 255,
+    "hit_sell": 0.6397849462365591,
+    "hit_buy": 0.7215686274509804,
+    "mean_sell": 0.10096774193548384,
+    "mean_buy": -0.1252941176470588,
+    "median_sell": 0.06000000000000005,
+    "median_buy": -0.1299999999999999,
+    "sd_sell": 0.21987251596804183,
+    "sd_buy": 0.20605932313365752,
+    "uncond_sell": 0.4672727272727273,
+    "gap": 0.0495079479326028
+   },
+   "stats_variants": 256,
+   "printed": {
+    "n_sell": 189,
+    "n_buy": 261,
+    "hit_sell": 0.64,
+    "hit_buy": 0.732,
+    "hit_all": 0.693,
+    "mean_sell": 0.1,
+    "mean_buy": -0.12,
+    "median_sell": 0.07,
+    "median_buy": -0.13,
+    "sd_sell": 0.24,
+    "sd_buy": 0.2,
+    "uncond_selloff": 0.47
+   },
+   "december_rebuilt": [
+    "2018-11-30",
+    "2018-12-14"
+   ],
+   "december_printed": [
+    "2018-12-04",
+    "2018-12-14"
+   ],
+   "cftc_proxy_best_abs_corr": 0.2953344289587419,
+   "cftc_proxy_variants": 32,
+   "strike_level_data_on_machine": false
+  }
+ },
+ "I7": {
+  "verdict": {
+   "continuation_time_series": "Partial",
+   "continuation_cross_section": "Partial",
+   "reversal": "Partial",
+   "coffee": "Specified"
+  },
+  "evidence": {
+   "date_map": [
+    "1992-10-12",
+    "2018-12-10"
+   ],
+   "chart_stats": {
+    "ts": {
+     "sharpe_all": 0.32771845606230304,
+     "sharpe_1999": 0.3518022662162207,
+     "vol_1999": 0.04943138463124219
+    },
+    "cs": {
+     "sharpe_all": 0.2437755022680609,
+     "sharpe_1999": 0.3032223564182889,
+     "vol_1999": 0.031772440039349946
+    },
+    "rev": {
+     "sharpe_all": 0.24139709014337826,
+     "sharpe_1999": 0.26006905701763783,
+     "vol_1999": 0.03535785358705972
+    }
+   },
+   "base_1W": {
+    "ts": {
+     "corr_w": 0.8416263195243119,
+     "corr_m": 0.9311047010931034,
+     "corr_q": 0.9408365342133606,
+     "sharpe_1999": 0.29134525877785206,
+     "vol_1999": 0.047687548761165474,
+     "turn_week_pct": 9.340056471548133,
+     "printed_turn": 16.66
+    },
+    "cs": {
+     "corr_w": 0.7294669641790431,
+     "corr_m": 0.8183646895540192,
+     "corr_q": 0.8638178815356767,
+     "sharpe_1999": 0.22007394560817015,
+     "vol_1999": 0.028956661093163805,
+     "turn_week_pct": 14.06331833835457,
+     "printed_turn": 56.4
+    },
+    "rev": {
+     "corr_w": 0.6879776982902186,
+     "corr_m": 0.7996249712094355,
+     "corr_q": 0.8115488701840509,
+     "sharpe_1999": 0.4067882213554125,
+     "vol_1999": 0.0321309224730334,
+     "turn_week_pct": 48.31745501142125,
+     "printed_turn": 56.4
+    }
+   },
+   "halves": {
+    "ts": {
+     "1999-2008": 0.93398255147755,
+     "2009-2018": 0.9237726827051937,
+     "1993-1998 (no EUR)": 0.25242896994565756
+    },
+    "cs": {
+     "1999-2008": 0.8388502237706889,
+     "2009-2018": 0.7967010559233909,
+     "1993-1998 (no EUR)": 0.29628749713278413
+    },
+    "rev": {
+     "1999-2008": 0.8220217365072168,
+     "2009-2018": 0.7830122722300092,
+     "1993-1998 (no EUR)": 0.5110442142256606
+    }
+   },
+   "ts_vol21": [
+    {
+     "window": "1W",
+     "corr_w": 0.8286604983299224,
+     "corr_m": 0.9152222063448093,
+     "corr_q": 0.9347062027626653,
+     "gross_sharpe_1999": 0.349031927166196,
+     "printed_gross": 0.418,
+     "printed_net": 0.4,
+     "turn_week_pct": 16.684554817690472,
+     "printed_turn": 16.66,
+     "vol_1999": 0.04693746919630088
+    },
+    {
+     "window": "2W",
+     "corr_w": 0.8336464955401974,
+     "corr_m": 0.9210288243304883,
+     "corr_q": 0.9469163900818364,
+     "gross_sharpe_1999": 0.35534892604711144,
+     "printed_gross": 0.364,
+     "printed_net": 0.35,
+     "turn_week_pct": 13.427541257383158,
+     "printed_turn": 13.07,
+     "vol_1999": 0.046349936249915166
+    },
+    {
+     "window": "1M",
+     "corr_w": 0.8274485859618503,
+     "corr_m": 0.8986913945574334,
+     "corr_q": 0.9326839705262369,
+     "gross_sharpe_1999": 0.3288273260034665,
+     "printed_gross": 0.343,
+     "printed_net": 0.332,
+     "turn_week_pct": 10.213625529916268,
+     "printed_turn": 9.96,
+     "vol_1999": 0.04538265047235518
+    },
+    {
+     "window": "3M",
+     "corr_w": 0.7141098815523009,
+     "corr_m": 0.7447807692165062,
+     "corr_q": 0.7465232362567331,
+     "gross_sharpe_1999": 0.2535162005825614,
+     "printed_gross": 0.312,
+     "printed_net": 0.305,
+     "turn_week_pct": 4.783517903003314,
+     "printed_turn": 5.58,
+     "vol_1999": 0.041479002646691424
+    }
+   ],
+   "variants": 38
+  }
+ },
+ "I8": {
+  "verdict": "Partial",
+  "evidence": {
+   "printed": {
+    "TU": -1.58,
+    "FV": -1.69,
+    "TY": -1.78,
+    "US": -1.81
+   },
+   "mean_response": {
+    "date": "2023-10-30",
+    "FV": -0.6546712258816134,
+    "TU": -0.6954366151948235,
+    "TY": -0.6255290738221935,
+    "US": -0.479656347571867,
+    "mae": 1.1011766843823756
+   },
+   "sum_response": {
+    "date": "2023-10-30",
+    "FV": -1.9640136776448403,
+    "TU": -2.0863098455844704,
+    "TY": -1.8765872214665804,
+    "US": -1.438969042715601,
+    "mae": 0.3119854254950725
+   },
+   "variants": 16,
+   "tick_data_2023_on_machine": false
+  }
+ },
+ "I9": {
+  "verdict": "Not reproducible",
+  "evidence": {
+   "reason": "CitiFX flows are private, CPAIN is undefined, and the weights are hidden."
+  }
+ },
+ "I10": {
+  "verdict": "Partial",
+  "evidence": {
+   "exhibit2_cells": 632,
+   "live": 342,
+   "live_inside_band": 1,
+   "live_no_partner": 0,
+   "carry_range": [
+    3.391514121036663,
+    7.560939585822717
+   ],
+   "carry_printed": 5.4,
+   "momentum": [
+    {
+     "span": 4,
+     "raw": -0.26509964595679164,
+     "implied_scale": 2.3116326270632177
+    },
+    {
+     "span": 6,
+     "raw": -0.2884407778424856,
+     "implied_scale": 2.1245712745625647
+    },
+    {
+     "span": 8,
+     "raw": -0.1357204244815387,
+     "implied_scale": 4.515259905483016
+    },
+    {
+     "span": 9,
+     "raw": -0.03101199550439013,
+     "implied_scale": 19.760514634728228
+    },
+    {
+     "span": 13,
+     "raw": 0.46245225754268804,
+     "implied_scale": -1.3251378515760834
+    },
+    {
+     "span": 17,
+     "raw": 0.9927078167875758,
+     "implied_scale": -0.6173145619017119
+    },
+    {
+     "span": 18,
+     "raw": 1.1254040994137848,
+     "implied_scale": -0.5445270648434969
+    },
+    {
+     "span": 26,
+     "raw": 2.1476521734389933,
+     "implied_scale": -0.28534089392852746
+    }
+   ],
+   "momentum_printed": -4.6,
+   "ust_line_corr_all": 0.591,
+   "ust_line_corr_live": 0.5406361265900199
+  }
+ },
+ "I11": {
+  "verdict": "Specified",
+  "evidence": {
+   "reason": "Stan, NumPyro, JAX and PyMC are not installed, so the sampler did not run."
+  }
+ }
+}

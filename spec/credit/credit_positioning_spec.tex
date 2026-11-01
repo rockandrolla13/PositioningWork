@@ -1,0 +1,752 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,xcolor,amsmath,amssymb,booktabs,tabularx,longtable,array,enumitem,listings,hyperref,microtype}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\setlist{itemsep=2pt,topsep=3pt}
+\lstset{basicstyle=\ttfamily\footnotesize,columns=fullflexible,keepspaces=true,breaklines=true,frame=single,framerule=0.3pt,rulecolor=\color{black!30},backgroundcolor=\color{black!3},showstringspaces=false}
+\newcommand{\stated}{\textsc{[source]}}
+\newcommand{\proposal}{\textsc{[proposal]}}
+\title{Credit Positioning Monitor\\ \large Implementation specification for a production build}
+\author{PositioningWork project. Private.}
+\date{1 November 2026}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section*{Start here}
+\textbf{Next action: build Phase 1 in Section~\ref{sec:order}. It needs only TRACE, a bond reference table and a yield curve.}
+
+This document tells you how to build positioning measures for corporate bonds, credit ETFs, credit futures and CDX on your production machine. It also specifies the embedding, attention and LightGBM (LGBM) layers. You can build from it without any other document. The companion documents give the background.
+
+\textbf{No model in this document has been fitted.} Sizes and settings are starting values, for you to test. Items marked \stated{} come from a named source. Items marked \proposal{} are design choices of mine.
+
+\subsection*{What the evidence supports}
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Item & Status at the time of writing \\
+\midrule
+Positioning signals on rates and FX & Reproduce the bank numbers. No predictive signal passed after May 2019 (0 of 53 tests, with low power). \\
+Credit ETF measures & Describe stress. None predicted excess returns (0 of 160 tests). \\
+TRACE measures & A pilot on 308 bonds from 12 large issuers, mostly tech, passed 0 of 48 tests. Single-bond flow showed no usable lead on spreads, and little steady accumulation. Issuer and 13-week questions stayed too thin to answer. It is not market-wide. \\
+RFQ measures & Untested. No paper tests RFQ imbalance against returns. \\
+CDX & No public holder data. No out-of-sample positions test found. \\
+Credit futures & About 25 reports. Too short to test. \\
+Embedding, attention, LGBM & A design. No precedent found. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+So build these first as a \textbf{monitor}. Treat any trading use as a hypothesis, to be passed through Section~\ref{sec:valid}.
+
+\section{Architecture}
+\subsection{Package layout}
+\begin{lstlisting}
+credpos/
+  config/          universe.yaml, buckets.yaml, models.yaml
+  contracts.py     table schemas and checks (Section 2)
+  ingest/          trace.py rfq.py etf.py finra.py cftc.py cdx.py curve.py reference.py
+  clean/           trace_clean.py rfq_clean.py
+  core/            spread.py timing.py standardise.py ledger_shape.py taarss.py
+  features/        trace_flow.py rfq_flow.py etf_flow.py etf_pressure.py
+                   futures_pos.py cdx_proxy.py state.py
+  panel/           assemble.py          (long and wide feature tables)
+  models/          baseline.py ridge.py lgbm.py attention.py stack.py
+  validate/        splits.py placebo.py stats.py report.py
+  jobs/            daily.py weekly.py monthly.py
+  tests/
+\end{lstlisting}
+Reuse \code{posmon} from the positioning specification. Do not rewrite it. You need:
+\begin{itemize}
+\item From \code{posmon.ledger}: \code{build_ledger} and \code{RemovalRule}.
+\item From \code{posmon.indicators}: \code{taarss}, \code{sentiment_index} and \code{db_scaled}.
+\item From \code{posmon.data}: \code{fetch_cftc}.
+\end{itemize}
+
+\subsection{Five rules for every table}
+\begin{enumerate}
+\item Every row has an \code{event_date} and an \code{available_at} timestamp. \code{available_at} is when your system could first have known the value.
+\item A feature for decision time $T$ may use only rows with \code{available_at} $\le T$.
+\item Raw tables are append-only. Corrections add a new row with a later \code{available_at}.
+\item Every feature row stores a \code{feature_version}. Change the version when the recipe changes.
+\item Keep licensed data in its licensed store. Copy statistics out, not rows.
+\end{enumerate}
+
+\subsection{Weekly clock}
+Weeks end on Friday. A signal for week $t$ uses information up to Thursday close of week $t$. A forward change starts at Friday's level of week $t$. That one-day gap means a print in the signal never sets the starting level.
+
+CFTC data for a Tuesday arrives on Friday at 15:30 New York, and so belongs to the next week's signal. Use the CFTC late-release notices for delayed reports.
+
+\section{Data contracts}\label{sec:data}
+\subsection{Tables}
+Types are \code{D} date, \code{TS} timestamp, \code{F} float, \code{S} string, \code{I} integer.
+
+\small
+\begin{longtable}{@{}p{0.2\linewidth}p{0.47\linewidth}p{0.27\linewidth}@{}}
+\toprule
+Table & Required columns & Source and lag \\
+\midrule\endhead
+\code{bond_ref} & \code{bond_id S, cusip S, isin S, issuer S, sector S, rating S, coupon F, maturity D, issue_date D, amount_out F, callable I, floater I, seniority S, valid_from D} & Vendor reference. As-of history, not a current snapshot. \\
+\code{trace_trades} & \code{cusip S, exec_ts TS, report_ts TS, price F, yield F, par F, reporter_side S (B/S), contra S (C/D/A/T), status S} & FINRA. Available at \code{report_ts}. Public data caps size at 5MM+ for IG and 1MM+ for HY, so prefer uncapped data. \\
+\code{rfq_events} & \code{rfq_id S, ts TS, bond_id S, side I, size F, venue S, protocol S, quote F, fill I, n_dealers I, fair_value F, spread F} & Work machine. \code{side}: +1 client sells, $-1$ client buys. \\
+\code{curve} & \code{date D, tenor F, yield F} & FRED constant maturity, or your own curve. \\
+\code{bond_marks} & \code{bond_id S, ts TS, price F, spread F, spread_dur F, rate_dur F, source S} & Vendor mark, such as CP+. \\
+\code{etf_daily} & \code{ticker S, date D, nav F, exdiv F, shares F, close F, volume F} & Issuer files. Share data is usable the next trading day. \\
+\code{etf_holdings} & \code{ticker S, date D, bond_id S, par F, weight F, mv F, eff_dur F, ytw F} & Issuer daily holdings file. \\
+\code{etf_pcf} & \code{ticker S, date D, basket_type S, bond_id S, par F, cash F} & Your PCF feed. Keep custom baskets apart if you can. \\
+\code{finra_si} & \code{ticker S, settle_date D, short_qty F, adv F} & FINRA API. Usable from settlement plus 10 business days \proposal. \\
+\code{cftc_tff} & Fields as in \code{posmon.data}, plus trader counts and top-4 and top-8 concentration & CFTC, Friday 15:30 New York. Codes: 221605 HY, 221606 IG, 221607 IG Duration-Hedged, combined and futures-only. \\
+\code{futures_daily} & \code{contract S, date D, settle F, volume F, oi F} & CME, Cboe (IBHY, IBIG). Direct access not confirmed. \\
+\code{cdx_daily} & \code{index S, series I, version I, tenor F, date D, spread F, price F, on_the_run I} & Your CDS vendor. \\
+\code{cdx_intrinsic} & \code{index S, series I, date D, intrinsic F} & Computed from constituent CDS. Needs a vendor. \\
+\code{cds_market} & \code{date D, product S, gross F, net F, volume F, cleared F} & ISDA SwapsInfo, CFTC Weekly Swaps Report. \\
+\code{insurer_hold} & \code{bond_id S, insurer S, report_date D, par F, book_value F, trade_side S, trade_date D} & NAIC Schedule D. Access and timing not checked. \\
+\code{fund_hold} & \code{bond_id S, fund S, report_date D, par F, mv F} & SEC N-PORT. Public at quarter end, 60-day lag. Confirm before use. \\
+\code{bond_events} & \code{bond_id S, date D, event S, amount F, level F} & Issue, reopening, call, tender, maturity. Your reference vendor. \\
+\code{dealer_cap} & \code{date D, measure S, value F} & NY Fed primary dealer statistics. Weekly, with a lag. Choose one measure and freeze it. \\
+\code{funding} & \code{date D, measure S, value F} & Your choice of funding stress series. Freeze it before any test. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{Checks at load}
+\begin{enumerate}
+\item Primary keys are unique, after your correction logic has run.
+\item \code{available_at} is at or after \code{event_date}.
+\item ETF shares never jump more than 50\% in a day without a logged split or error flag.
+\item Every TRACE CUSIP is in \code{bond_ref}. Count and report the misses.
+\item Any feed missing on its schedule raises an alert. A missing feed must never read as zero flow.
+\end{enumerate}
+
+\section{Shared calculations}
+\subsection{Spread}
+For bond $b$ on date $d$ with remaining maturity $m$, the spread is
+\[
+s_{b,d} = y_{b,d} - y^{\mathrm{Tsy}}_{d}(m),
+\]
+with the Treasury yield interpolated linearly in maturity. Use a vendor OAS instead if you have one, and record which. A TRACE yield can be a yield to call, so a TRACE-based spread is a G-spread style measure.
+
+\textbf{Daily level, to limit bid-ask bounce} \proposal{}: take the mean of the volume-weighted customer buy yield and the volume-weighted customer sell yield, when both exist. Otherwise use the volume-weighted inter-dealer yield. Otherwise, leave it missing. One-sided customer yields never set a level.
+
+\textbf{Weekly level:} the last valid daily level in the week, at most 2 trading days old.
+
+\subsection{Target}
+\[
+y^{(H)}_{b,t} = \big(s_{b,t+H} - s_{b,t}\big) - \operatorname{median}_{c \in k(b),\, \mathrm{issuer}(c) \ne \mathrm{issuer}(b)} \big(s_{c,t+H} - s_{c,t}\big)
+\]
+Buckets $k$ are remaining maturity of 1--3, 3--7, 7--15 and 15+ years, split by IG and HY. Use $H \in \{1, 4, 13\}$. Start with $H = 4$. Test $H=1$ with non-overlapping weeks when you need more independent evidence.
+
+Do not use a price-return target without removing rates. Follow Dickerson et al.\ on bond data: do not apply one-sided return filters, and allow for price error in both signal and target.
+
+\subsection{Standardising}
+\[
+x^{\ast}_{t} = \operatorname{clip}\left(\frac{x_t - \mu_{<t}}{\sigma_{<t}}, -3, 3\right)
+\]
+$\mu$ and $\sigma$ use an expanding window with at least 52 weeks. Before that, the value is missing. Never use full-sample statistics.
+
+\subsection{Ledger shape}\label{sec:shape}
+This turns a lot ledger into a fixed-length vector, and is the main embedding input.
+
+\begin{enumerate}
+\item Replay net flow over the last $N$ weeks with \code{build_ledger} and \code{RemovalRule.PRO_RATA}. Entry level is the spread for bonds, or total-return NAV for ETFs.
+\item Compute each open lot's distance, in volatility units. For long lots on spreads, $D_\ell = (s_t - s_\ell)/\sigma_t$. For long lots on prices, $D_\ell = (P_\ell - P_t)/\sigma_t$. Short lots take the opposite sign. Positive means under water.
+\item $\sigma_t$ is the standard deviation of weekly changes over the past 26 weeks, and it must be above a floor of 1 bp for spreads.
+\item Use 15 edges from $-3.5$ to $+3.5$, in steps of $0.5$. That gives 16 bins, numbered 0 to 15. A bin includes its left edge.
+\item $h_b = $ open quantity in bin $b$, over total open quantity. The bins sum to 1.
+\item If total open quantity is $10^{-6}$ or less, return a missing row, with \code{empty_flag = 1}. Pro-rata removal leaves rounding residue, so never test for exact zero.
+\end{enumerate}
+
+Also store:
+\begin{itemize}
+\item \code{pain_share}: the sum of $h_b$ over lots with $D_\ell > 0$.
+\item \code{depth}: the open-weighted mean of $D_\ell$ across those lots.
+\item \code{coverage}: open quantity over amount outstanding. Always publish this beside any Pain reading.
+\item \code{unmatched}: the removal amount that exceeded open lots.
+\end{itemize}
+On net flow, starting positions are unknown, so the shape describes recent flow, not all holders. Section~\ref{sec:cost} builds a version that covers the whole bond.
+
+\textbf{Variant to test} \proposal: retire every open lot by the week's turnover as well, as in Grinblatt and Han (2005): $q_{\ell,t} = q_{\ell,t-1}(1 - \mathrm{turnover}_t)$. Our ledger otherwise moves only on net changes. So its entries go stale when bonds change hands with no net flow.
+
+\subsection{Flow trend (TAARSS)}
+For a month of $n$ trading days, with $Y_j$ the cumulative flow in percent of AUM or amount outstanding on day $j$, and zero at the prior month-end:
+\[
+b = \frac{\sum_j j\,Y_j}{\sum_j j^2}, \qquad R^2 = \operatorname{corr}(j, Y_j)^2, \qquad \mathrm{TAARSS} = b \times R^2 .
+\]
+Use \code{posmon.indicators.taarss}. It separates steady accumulation from a single block. For weekly bond data, use a 13-week window on weeks 1 to 13, in the same formula \proposal.
+
+\section{TRACE measures}\label{sec:trace}
+\subsection{Cleaning, in order}
+\begin{enumerate}
+\item Apply cancels and corrections. If you have only final data, record that it is not point-in-time.
+\item Remove inter-dealer double counts: drop rows with \code{contra = D} and \code{reporter_side = B}.
+\item Drop prices outside $(1, 300]$.
+\item Drop any customer trade above \$250 million par \proposal. These look like issuer or error prints. Log them.
+\item Duplicates on bond, timestamp, price, yield, size, side and contra: remove extras at \$1 million and above, and keep extras below \proposal. Small repeats look like bunched retail allocations. Large repeats look like double reports.
+\item Drop customer flow for the first 5 trading days of a bond's life and after each reopening. Primary allocations are in this data. In the pilot, customer buys in those days reached a median 107\% of the tranche and held 44\% of lifetime customer volume. After day 5, net flow was close to zero, so 5 days looks sufficient.
+\item Yield: keep 0.1 to 40. Drop a print more than 200 bp from the bond's centred 11-day median yield. This filter sees later days, so use it for level research only, and use a trailing median in production.
+\item Remaining maturity must be at least 1 year. Remove floaters and structured notes. Build a list of structured-note programmes, because a large issuer can have tens of thousands of them.
+\item Flag portfolio trades. FINRA carries a portfolio modifier from 15 May 2023. Baskets pollute single-bond flow, so report results with and without them.
+\end{enumerate}
+
+\subsection{Sign}
+For \code{contra = C}, a dealer sale (\code{S}) is a customer buy, and a dealer buy (\code{B}) is a customer sell. FINRA's file layout gives C customer, D inter-dealer, A non-member affiliate, T alternative trading system (ATS). The pilot confirmed these on data. Use C as primary. Report A on a separate line, because it sits between customer and inter-dealer. Leave T and D out, because ATS trades behave like inter-dealer trades, with a median gap of zero.
+
+\textbf{Sign acceptance test.} On the same bond and day, customer buys must print at a higher mean price than customer sells. Fail the load if this does not hold across the panel.
+
+\subsection{Features}
+For bond $b$ in week $t$, with $B$ customer-buy par and $S$ customer-sell par:
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Code & Definition \\
+\midrule
+\code{net_flow} & $f_{b,t} = 100 (B_{b,t} - S_{b,t}) / AO_{b,t}$, in percent of amount outstanding. \\
+\code{cum_flow_N} & Sum of $f$ over $N \in \{4, 13, 26\}$ weeks. Rising means customers accumulate. \\
+\code{flow_trend_13} & TAARSS on the 13-week cumulative path. \\
+\code{imbalance} & $(B - S)/(B + S)$, missing below a minimum of 3 trades. \\
+\code{shape_N} & The 16-bin ledger shape, on net flow over $N = 26$ weeks, with spreads as entries. \\
+\code{pain_share, depth, coverage} & As in Section~\ref{sec:shape}. \\
+\code{flow_reversal} & $\operatorname{cum\_flow}_4$ minus $\operatorname{cum\_flow}_{13}$ scaled to 4 weeks. \\
+\code{activity} & Trade count and par in the week, for stratifying. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Limits to state on every output.} These measures show customer trades seen in TRACE, not positions. Contra C covers every non-dealer, including ETFs and hedge funds. Starting positions are unknown. Customer-to-customer trades are not seen. Dealer sales to affiliates can make customers look like net sellers: in the pilot, customers net sold 4.6\% of amount, and adding affiliates cut that to 1.2\%.
+
+\textbf{What the pilot means for these features.} Keep \code{net_flow} and \code{cum_flow_N} as descriptions. Treat \code{flow_trend_13} and \code{shape_N} on net flow as unproven, and do not build them into the first monitor. For a ledger that covers the whole bond, use Section~\ref{sec:cost}. Flow in the pilot looked like noise, with median autocorrelation near zero, and only 11.1\% of bond-months beat their own 90th percentile of reshuffles, against 10\% by chance. The net-flow ledger covered only about 2\% of amount, so it does not describe holders.
+
+\subsection{Thin bonds}
+Single bonds trade too rarely in much of the market. Compute every measure at four levels: bond, issuer, issuer and maturity bucket, and sector, rating and maturity bucket. Sum par before you divide by the sum of amount outstanding. Publish single-bond readings only for bonds with at least 26 weeks of customer trades in the last year \proposal.
+
+\section{Full-coverage cost basis}\label{sec:cost}
+\textbf{Why this exists.} A ledger on net flow sees a small slice of holders: about 2\% of amount in the TRACE pilot, and 8 to 13\% of shares on LQD and HYG. That limit comes from how it was built. This section builds a cost estimate for the whole bond or fund, and splits it by holder where data allows. All of it is \proposal{} and untested. It gives Pain a fair test. It does not show that Pain works.
+
+\subsection{Whole-bond ledger from TRACE}\label{sec:wholebond}
+This uses every customer trade, and it starts at issuance. It needs uncapped sizes and full history from each bond's issue date.
+\begin{enumerate}
+\item \textbf{Opening lot.} Create one lot with quantity equal to the tranche size. Its entry level is the reoffer spread, or the volume-weighted customer spread over the first 5 trading days if reoffer is missing. Ignore flow in those 5 days. It is the allocation itself.
+\item \textbf{Bonds issued before your TRACE history.} Mark them \code{start_known = 0}, and use the first full week of data as a provisional opening lot. Keep them out of validation.
+\item \textbf{Reopenings.} Add a new lot of the reopened size, at that date's level.
+\item \textbf{Each week, sells first.} Remove customer sell par from open lots under the removal rule. Then add customer buy par as one lot at the week's customer buy level. Sells go first, so a buy cannot be sold in its own week.
+\item \textbf{Contra codes.} Use C only. Report the version with A added as a sensitivity. Leave out T and D.
+\item \textbf{Calls, tenders and maturities.} Remove the amount pro rata, with no entry level, on the event date.
+\item \textbf{Dealer gap.} $\mathrm{gap}_t = AO_t - \mathrm{open}_t$. Customers can net sell, so this is a rough estimate of dealer and unseen holdings. A persistent gap above 10\% of amount flags the bond \code{gap_flag = 1}.
+\end{enumerate}
+Then apply Section~\ref{sec:shape} to the open lots. Coverage now means open quantity over amount, and it should sit near 1.
+
+\textbf{Capped sizes.} Public TRACE shows 5MM+ and 1MM+. If you only have capped data, set capped prints to the cap, add \code{capped_share}, and do not trust the ledger on bonds where that share is high. Validate against uncapped data if you can.
+
+\subsection{Turnover-based cost}\label{sec:turnover}
+This is the standard method (Grinblatt and Han 2005), adapted here to spreads. It needs only volume and a level.
+\[
+V_t = \min\left(\frac{(B_t + S_t)/2}{AO_t},\, 1\right), \qquad
+C_t = (1 - V_t)\, C_{t-1} + V_t\, s_t, \qquad C_0 = \text{opening level.}
+\]
+$B$ and $S$ are customer buy and sell par. Taking their average stops one transfer through a dealer counting twice.
+
+\textbf{Lot version, for the shape.} Each week, scale every lot by $(1 - V_t)$, then add a new lot of $V_t \times AO_t$ at $s_t$. Open quantity always equals amount.
+
+\textbf{Reading.} Long-side overhang is $G_t = (s_t - C_t)/\sigma_t$. Positive means the average holder is under water. Keep gains and losses as two separate features, because the loss side can behave differently (An 2016).
+
+\textbf{Compare the two.} The whole-bond ledger uses side, and turnover does not. Report both, and the rank correlation between them, by rating and bond age. Where they disagree, the removal rule is doing the work.
+
+\subsection{ETF shareholders}
+Exchange trades change who holds the shares, even when the share count stays flat. So use exchange volume, not creations.
+\[
+V_t = \min\left(\frac{\mathrm{volume}_t}{S_t},\, 1\right), \qquad C_t = (1 - V_t)\, C_{t-1} + V_t\, TRN_t .
+\]
+Holding periods here are assumptions. Fast traders create much of ETF volume, so this method probably replaces long-term holders too quickly. As a variant, scale volume down by a fixed factor, chosen on past data. The start date is the fund's inception, or the first date in your data, marked as provisional.
+
+\subsection{Splitting by holder}\label{sec:stack}
+Holder type can flip the sign, so split amount outstanding into groups. Measure what you can, and estimate the rest:
+\[
+AO_{b,t} = H^{\mathrm{ETF}}_{b,t} + H^{\mathrm{Ins}}_{b,t} + H^{\mathrm{Fund}}_{b,t} + H^{\mathrm{Dealer}}_{b,t} + H^{\mathrm{Rest}}_{b,t}.
+\]
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lp{0.27\linewidth}L@{}}
+\toprule
+Holder & Position from & Cost basis from \\
+\midrule
+ETFs & Daily holdings par & Lots from each change in par, at that day's mark. This is the fund's position, not its shareholders'. \\
+Insurers & NAIC Schedule D holdings and trades & Reported book value. This is the one measured cost basis in credit. \\
+Mutual funds & N-PORT holdings, public at quarter end with a 60-day lag & Lots from changes between reports, at the mark for that period. Timing is coarse. \\
+Dealers & TRACE net customer flow, with NY Fed aggregates as a check & Weekly lots at the dealer side level. Rough. \\
+Rest & Amount minus the above & Whole-bond ledger or turnover, on what remains. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Rules.}
+\begin{enumerate}
+\item I have not checked access to NAIC or N-PORT data, or filing timing. Confirm both, then set \code{available_at} from the real filing dates.
+\item Carry slower holdings forward only until the next report, and store the age of each value.
+\item If measured holdings exceed amount, scale them to it, set \code{stack_flag = 1}, and log it. Rest cannot be negative.
+\item Remove measured trades from the Rest ledger only if you can match them reliably. Otherwise, state the double count.
+\item Buy-and-hold groups trade rarely. So apply turnover only to the Rest pool, using $V_t = \text{transferred par}/H^{\mathrm{Rest}}_{t}$, capped at 1. This stops long-term holders being replaced too quickly.
+\end{enumerate}
+
+\textbf{Features.} For each holder group $g$: \code{share_g} (share of amount), \code{pain_share_g}, \code{depth_g}, \code{overhang_g}, \code{shape_g} and \code{age_g}. In the attention layer each group is a token group. With 5 groups the layer has 176 parameters: tags 80, query 48, loadings 25, shape 16, head 7.
+
+\subsection{Validating the estimate}\label{sec:costval}
+No paper we found checks cost-basis estimates against true positions, in any asset class. You can do this, so do it before any return test.
+\begin{enumerate}
+\item \textbf{Against insurer book values.} For bonds with heavy insurer ownership, compare insurers' holdings-weighted book yield with your proxy's cost at the same date. Report rank correlation and mean gap, by rating and bond age. Book value is amortised, so convert both to the same basis first. This check is imperfect, because insurers are not all holders.
+\item \textbf{Bond-level holdout.} Fit nothing on it. Simply report the error on issuers you did not look at during design.
+\item \textbf{Rule sensitivity.} Compare pro rata, FIFO and turnover. Our rates and FX study found the removal rule did not change results, so check whether that holds here.
+\item \textbf{Accounting checks.} Lots sum to amount for turnover. Gap stays within bounds for the ledger.
+\end{enumerate}
+If the proxy does not track book values, say so, and treat Pain from it as unvalidated.
+
+\subsection{Testing it}
+Run this after validation, with Section~\ref{sec:valid}. Earlier results tested the thin version, so this is a new test.
+\begin{enumerate}
+\item \textbf{Does Pain relate to later selling?} Target: customer sell par over the next 1 and 4 weeks, over amount. Controls: past spread change, spread level and past flow. In the pilot, the thin version's result disappeared with controls.
+\item \textbf{Does it need a limit?} Interact Pain with dealer capacity and funding stress. The literature says a loss alone isn't enough.
+\item \textbf{Does holder type flip the sign?} Run by holder group. Insurers may sell winners and keep losers (Ellul et al.\ 2015).
+\item \textbf{Mechanical link.} Pain contains today's spread, so it rises after a widening, and spreads then revert. Always control for past spread change and spread level, and beat those controls.
+\end{enumerate}
+
+\section{RFQ measures}\label{sec:rfq}
+\textbf{Data view.} The work-machine RFQ data is anonymous and comes from one dealer. So it shows inquiries to that dealer, not market flow. It holds no client ID, so you cannot build a client's entry price or client breadth.
+
+\subsection{Cleaning}
+\begin{enumerate}
+\item Merge repeat inquiries: same bond, side and size within 30 minutes count once \proposal. Anonymous data cannot remove all repeats.
+\item Keep list and portfolio protocols apart from single-name RFQs.
+\item Only fills set an entry level. Failed inquiries may still signal demand, so keep them as a separate flow.
+\end{enumerate}
+
+\subsection{Sign}
+Your spec's \code{side} is from the dealer's view: $+1$ means the client sells. Define $c = -\mathrm{side}$ so that $+1$ means the client buys. This matches the TRACE sign.
+
+\subsection{Features, per bucket}
+A bucket is issuer, or sector and rating and maturity. Use a half-life $\tau$ in days from $\{1, 5, 20\}$.
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Code & Definition \\
+\midrule
+\code{rfq_imb} & $\sum_{u<t} c_u\, e^{-(t-u)/\tau} \big/ \sum_{u<t} e^{-(t-u)/\tau}$. Excludes the current RFQ. \\
+\code{rfq_flow} & $\sum_{u<t} c_u\, \mathrm{size}_u\, e^{-(t-u)/\tau}$ over bucket amount outstanding. \\
+\code{rfq_level} & Signed, size-weighted mean of fair-value spread at inquiry, by buy and sell side. \\
+\code{rfq_gap} & Today's bucket spread minus \code{rfq_level}, in volatility units. This is a proxy for being under water. It has no support in the literature, so treat it as new. \\
+\code{shape_rfq} & The 16-bin ledger shape on signed filled size, by bucket. \\
+\code{n_dealers_mean} & Mean dealers asked, if available. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Benchmark.} Any RFQ feature must beat the vendor mark. RFQ information may already be in a mark such as CP+ (Jacobsen et al.\ 2025). So target the change in a mark, or the residual after the mark.
+
+\section{Credit ETF measures}\label{sec:etf}
+\subsection{Shared rules}
+\begin{enumerate}
+\item Total-return NAV: $TRN_t = TRN_{t-1}(NAV_t + \mathrm{exdiv}_t)/NAV_{t-1}$, with $TRN_0 = 1$. Never use a raw price in a ledger.
+\item Flow: $dS_t = S_t - S_{t-1}$.
+\item Order date: a share change dated $t$ belongs to order date $t-k$. Estimate $k \in \{0,1,2\}$ on past data, as the lag with the highest correlation between log share change and premium. LQD and HYG gave $k = 1$ in our study.
+\item Keep IG and HY separate.
+\end{enumerate}
+
+\subsection{Fund-level descriptions}
+These describe stress. They did not predict excess returns in our study.
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Code & Definition \\
+\midrule
+\code{p2_etf} & Ledger on the last 126 rows of $dS$, with entry $TRN_{t-k}$. Pain share and depth, with coverage. Coverage was only 8 to 13\% of shares on LQD and HYG. \\
+\code{i1_etf} & $100\,S/(S + SI)$, using FINRA short interest. Only where median $SI/S$ is above 5\%. \\
+\code{i2_etf} & \code{sentiment_index} on $SI/(S+SI)$, 156 weeks. Never on the level of shares. \\
+\code{i3_etf} & \code{db_scaled} on $100(\ln S_{t} - \ln S_{t-26w})$, 209 weeks. \\
+\code{premium} & $(\mathrm{close} - NAV)/NAV$. NAV can be stale in stress. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Do not use P1, P5, I4, I5, I7 or I8 on ETF shares. Each failed in the study, for reasons listed there.
+
+\subsection{Single bonds from ETF data}\label{sec:bondetf}
+\textbf{Prefer holdings changes to PCFs.} A PCF is the basket for that day's creation or redemption, not a position. Bond ETFs use small and changing custom baskets (Shim and Todorov 2021; Koont et al.\ 2025). So flow $\times$ basket weight can misstate what a fund did. Change in par held is what it did.
+
+\begin{enumerate}
+\item \textbf{Actual bond demand.} $\Delta H_{b,f,t} = \mathrm{par}_{b,f,t} - \mathrm{par}_{b,f,t-1}$, from \code{etf_holdings}. Sum across funds, and divide by amount outstanding.
+\item \textbf{Basket demand, if you have PCFs.} $\mathrm{BK}_{b,t} = \sum_f \mathrm{basket\_par}_{b,f,t} \times \mathrm{units}_{f,t} / AO_{b,t}$, signed by creation or redemption. Units are the change in shares over creation-unit size.
+\item \textbf{Hypothetical demand.} $\mathrm{ARB}_{b,t} = \sum_f w_{b,f,t-1} \times \mathrm{dollar\ flow}_{f,t}/AO_{b,t}$, as pro-rata demand.
+\item \textbf{Discretion gap.} $\mathrm{GAP}_{b,t} = \mathrm{actual} - \mathrm{ARB}$. It shows where managers departed from pro-rata.
+\item \textbf{Rebalance split.} Set apart index reconstitution weeks. Deutsche Bank's equity study attributes its flow effect mainly to index reconstitution, not allocation flows.
+\item \textbf{Bond-level ledger.} Apply the ledger shape to $\Delta H$ with the bond's spread as entry. An ETF isn't a discretionary holder and isn't forced out by losses. So read this as flow pressure, not as Pain.
+\end{enumerate}
+
+\textbf{The pressure measure of Dannhauser and Hoseinzade (2021)} \stated. Over a window, with $F_f$ the fund's flow and $P_{25}, P_{75}$ its quartiles:
+\[
+\mathrm{Pressure}_{b} = -1 \times \left[\frac{\sum_f \max(0, \Delta H_{b,f} \mid F_f > P_{75})}{AO_b} - \frac{\sum_f \max(0, -\Delta H_{b,f} \mid F_f < P_{25})}{AO_b}\right]
+\]
+Positive means net selling pressure. Express it in percent of amount outstanding. Full details and gaps are in \code{research/dh2021/dh2021_spec.pdf}. Their design compares bonds from the same issuer, so copy that: use issuer-by-time fixed effects when you test any pressure measure.
+
+\subsection{Short interest split}
+Raw ETF short interest mixes dealer plumbing with real bets (Evans et al.\ 2026). Operational shorting does not predict returns in their equity ETF test. Build this split as they define it, from buy and sell imbalance minus the change in shares, and test only the directional part. This split has not been tested on bond ETFs.
+
+\subsection{Segment flow trend (from EFRoM)}
+Run TAARSS on pooled segments, never single funds: IG, HY, Senior Loans, EM Debt, Treasuries. Recipe steps are in method I13 of the positioning specification. Screen create-to-lend flows. A credit-only EFRoM needs new risk factors, and any set is a new assumption.
+
+\section{Credit futures}\label{sec:fut}
+Run these unchanged on TFF data for codes 221605, 221606 and 221607: I1 net share of open interest, and net by group, with leveraged funds and asset managers apart.
+
+\begin{enumerate}
+\item \textbf{Trader guard.} Publish the trader count and top-4 share beside every reading. Few traders report, and a few firms can move the series. On 27 October 2026 the top four IG traders held 76.8\% of longs.
+\item \textbf{Missing reports.} The CFTC drops a market below 20 reportable traders. High yield has been missing since 15 September 2026. Show missing as missing.
+\item \textbf{Roll filter.} Flag position changes around quarterly rolls. Open interest spiked on 8 September 2026.
+\item \textbf{Windows.} I2 needs 156 weeks and I3 needs 209. Until then, show raw net only.
+\item \textbf{Do not train any model on this data yet.}
+\end{enumerate}
+Add daily open interest and settlement for a P1-style ledger once you have a confirmed feed. Cboe IBHY and IBIG do not appear in CFTC reports, so they would give open interest only.
+
+\section{CDX}\label{sec:cdx}
+\textbf{There is no public holder data.} Rule 17 CFR 43.4 bars disclosing swap parties in public trade data. So every measure here is a proxy. If you have internal client or dealer positions, use them in place of these.
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Code & Definition \\
+\midrule
+\code{skew} & Index spread minus intrinsic spread, on the on-the-run series. Stress and capacity gauge. Needs constituent CDS. \\
+\code{cds_gross_chg} & Weekly change in gross notional. Poor in stress, because dealer intermediation dominates it. \\
+\code{cds_volume} & Weekly traded notional, relative to its trailing 52-week mean. \\
+\code{cds_cleared} & Change in cleared notional, where available. \\
+\code{trend} & Spread trend at 1, 3 and 6 months, as a proxy for systematic positioning. \\
+\code{pseudo_shape} & Ledger shape using a proxy for position change. Treat as experimental, because the flow is inferred. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Roll handling.}
+\begin{enumerate}
+\item Rolls fall around 20 March and 20 September. Exclude the roll window from flow measures, by a rule you fix in advance.
+\item Build a continuous spread by chaining on-the-run series, with an adjustment at each roll.
+\item Carry ledger lots across the roll in spread-change terms. Never treat a roll as new positions.
+\end{enumerate}
+
+\textbf{Reading.} Margin payments by protection sellers explain 12\% of weekly CDS spread changes (Siriwardane 2019). This supports forced-selling logic where you can see holders. Yet hedge funds were net buyers of protection into 20 March 2020 (Coughlan et al.\ 2022). So don't assume CDX holders are always the forced side.
+
+\section{Panel assembly}\label{sec:panel}
+\subsection{Long table}
+\begin{lstlisting}
+features_long(unit_id, unit_type, market, week_end, group, measure,
+              value, value_std, n_obs, available_at, feature_version)
+\end{lstlisting}
+\begin{itemize}
+\item \code{group} is the holder group. For TRACE it is \code{customer}. For futures it is \code{lev}, \code{am}, \code{dealer}. For RFQ it is \code{fills} or \code{inquiries}.
+\item \code{value_std} is the expanding standardised value.
+\item Ledger shapes use 16 measures, \code{shape_00} to \code{shape_15}.
+\end{itemize}
+
+\subsection{Wide table}
+Pivot to one row per unit and week, with a missing flag per measure. Join state and target. Assert that the maximum \code{available_at} per row is at or before the decision time.
+
+\subsection{State vector}
+$\mathbf{s}_t$ has five standardised inputs: spread level, spread volatility, past 26-week spread change, dealer capacity, and funding stress. Choose the last two sources once and record them.
+
+\section{Models}\label{sec:models}
+Build in this order. Each model must beat the one before it (Section~\ref{sec:valid}).
+
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Model & Inputs & Question \\
+\midrule
+B0 & Spread level, past spread change & The bar to beat \\
+M1 & Ridge on all features & Is there any linear signal? \\
+M2 & LGBM, plus hand-built interactions & Do interactions help? \\
+M3 & M2 plus frozen attention columns & Does attention add anything? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{M2: LightGBM}
+\begin{lstlisting}
+params = dict(objective="huber", max_depth=3, num_leaves=8, learning_rate=0.02,
+              feature_fraction=0.5, bagging_fraction=0.7, bagging_freq=1,
+              lambda_l2=10.0, min_data_in_leaf=max(50, int(0.05 * n_train)),
+              num_boost_round=2000, early_stopping_round=100, verbose=-1)
+# Row weights: every week sums to 1, and no issuer exceeds 10% of a week.
+# Splits are by whole weeks, never by row.
+\end{lstlisting}
+\textbf{Hand-built interactions:} depth $\times$ dealer capacity, depth $\times$ funding stress, \code{cum_flow_4} $\times$ dealer capacity, gains and losses as separate features (An 2016), and depth by holder group.
+
+\subsection{M3: the attention layer}
+\textbf{Embedding.} Each reading $i$ becomes a token, with holder group $g_i$ and measure $m_i$. Its learned tag is $\mathbf{e}_i = \mathbf{e}^G_{g_i} + \mathbf{e}^M_{m_i}$ in $d = 8$ dimensions. The ledger shape enters as one reading per group, $x = \mathbf{w}^\top \mathbf{h}$, with $\mathbf{w}$ shared across groups.
+
+\textbf{Attention.} Market state sets the query:
+\[
+\mathbf{q}_t = \mathbf{W}\mathbf{s}_t + \mathbf{c}, \qquad
+a_{i,t} = \frac{\exp(\mathbf{q}_t^\top \mathbf{e}_i / \tau)}{\sum_j \exp(\mathbf{q}_t^\top \mathbf{e}_j / \tau)}, \qquad \tau = 1,
+\]
+\[
+z_{u,t} = \sum_i a_{i,t}\, b_{g_i,m_i}\, x_{i,u,t}, \qquad
+\hat{y}_{u,t} = \beta_0 + \beta z_{u,t} + \boldsymbol{\gamma}^\top \mathbf{s}_t .
+\]
+\textbf{Why the signed loadings $b$.} Weights $a$ are always positive. Without $b$, holders could not carry opposite signs, and the literature says they can.
+
+\textbf{Missing readings} have their weight set to zero, and the rest are renormalised.
+
+\textbf{Reference code, not run on data.}
+\begin{lstlisting}[language=Python]
+class PositioningAttention(nn.Module):
+    def __init__(self, n_groups, n_measures, n_state, d=8, n_bins=16, tau=1.0):
+        super().__init__()
+        self.eg = nn.Embedding(n_groups, d)
+        self.em = nn.Embedding(n_measures, d)
+        self.query = nn.Linear(n_state, d)          # W and c
+        self.b = nn.Parameter(torch.zeros(n_groups, n_measures))
+        self.w = nn.Parameter(torch.zeros(n_bins))  # shared ledger-shape weights
+        self.head_z = nn.Linear(1, 1)               # beta_0 and beta
+        self.head_s = nn.Linear(n_state, 1, bias=False)  # gamma
+        self.tau = tau
+
+    def forward(self, g, m, x, hist, is_shape, mask, s):
+        # g, m: (rows, tokens) integer ids.  x: (rows, tokens) standardised values.
+        # hist: (rows, tokens, n_bins), used where is_shape is true.
+        # mask: (rows, tokens), 1 when the reading exists.  s: (rows, n_state).
+        x = torch.where(is_shape, (hist * self.w).sum(-1), x)
+        e = self.eg(g) + self.em(m)
+        q = self.query(s).unsqueeze(1)
+        logits = (q * e).sum(-1) / self.tau
+        logits = logits.masked_fill(mask == 0, -1e9)
+        a = torch.softmax(logits, dim=1)
+        z = (a * self.b[g, m] * torch.nan_to_num(x)).sum(1, keepdim=True)
+        y = self.head_z(z) + self.head_s(s)
+        return y.squeeze(1), a, z.squeeze(1)
+\end{lstlisting}
+
+\textbf{Initial values.} Initialise $\mathbf{b}$ and $\mathbf{w}$ with small random values, not the zeros above, or gradients through $z$ start at zero.
+
+\textbf{Training.}
+\begin{itemize}
+\item Loss: Huber, plus L2 on all parameters, plus $\eta \sum_i a_i \ln a_i$ to discourage over-concentrated weights. Start with weight decay $10^{-3}$ and $\eta = 10^{-3}$.
+\item Adam, learning rate $10^{-3}$. Whole-week batches. Early stopping on a later block.
+\item Three seeds. Average the frozen outputs.
+\end{itemize}
+
+\textbf{Size limit.} With 3 groups, 5 measures, 16 bins and 5 state inputs, the layer has 150 parameters: tags 64, query 48, loadings 15, shape vector 16, head 7. Do not exceed this, or add heads or layers, without new evidence.
+
+\subsection{Passing attention to LGBM}
+LGBM cannot train the attention layer, because trees pass no gradients back. So freeze the layer, then export:
+\begin{lstlisting}
+attn_w_<group>_<measure>   # the weight a_i, one column per token
+attn_z                     # the output z
+attn_entropy               # -sum(a * log(a))
+\end{lstlisting}
+Add these to the M2 inputs. Do not export $\hat{y}$.
+
+\section{Validation}\label{sec:valid}
+\subsection{Splits}
+\begin{enumerate}
+\item Fix a final holdout before any fit, and write its dates in \code{models.yaml}. No model or choice touches it until the end.
+\item Use an expanding walk-forward, refitting yearly.
+\item Purge: a training row's forward window must end before the test period starts. Add a gap of $H$ weeks.
+\end{enumerate}
+
+\subsection{Leakage rule for M3}
+If attention trains on the weeks LGBM learns from, its columns carry those weeks' targets, and LGBM will look far better than it is. So:
+\begin{lstlisting}[language=Python]
+for cut in yearly_cuts:
+    train, test = rows_before(cut, gap=H), rows_in_period_after(cut)
+    # Out-of-fold attention columns, for LGBM's training rows
+    for block in contiguous_week_blocks(train, k=5):
+        fit_rows = purge(train - block, around=block, weeks=H)
+        attn = fit_attention(fit_rows, seeds=[0, 1, 2])
+        train.columns[block] = attn.export(block)
+    # Test columns come from attention fitted on all of train
+    attn_full = fit_attention(train, seeds=[0, 1, 2])
+    test.columns = attn_full.export(test)
+    lgbm = fit_lgbm(train)        # early stopping on the latest training block
+    predictions[test] = lgbm.predict(test)
+\end{lstlisting}
+
+\subsection{Statistics}
+\begin{enumerate}
+\item \textbf{Primary measure:} weekly cross-sectional rank correlation with the target, averaged over time. Use Newey-West errors, with lag at least $H-1$.
+\item \textbf{Few issuers:} use a wild cluster bootstrap by issuer and date.
+\item \textbf{Effective sample:} report independent observations for each horizon.
+\item \textbf{Placebos:} shift flow circularly within each unit, and shuffle holder labels. The model must beat both.
+\item \textbf{Multiple testing:} apply Holm across all models, horizons and markets, and report raw and adjusted p-values.
+\item \textbf{Base rates:} report them beside any hit rate.
+\item \textbf{Costs:} report net results for any trading claim, with stated bid-ask and hedge costs.
+\end{enumerate}
+
+\subsection{Is attention meaningful?}
+\begin{enumerate}
+\item Weights must be stable across seeds and yearly refits. Check the rank correlation of mean weights.
+\item Compare SHAP importance of attention columns with their placebo versions.
+\item Inspect weights in stress, without using that to tune.
+\end{enumerate}
+
+\subsection{Stop rules}
+\begin{enumerate}
+\item If M1 and M2 fail against B0, stop. Attention cannot create information that the inputs lack.
+\item If M3 does not beat M2 out of sample, drop attention.
+\item If weights are unstable, drop attention even if M3 scores slightly better.
+\item Do not widen the search after seeing the holdout.
+\item Whatever the score, keep the descriptive monitor if users find it useful. It needs no predictive claim.
+\end{enumerate}
+
+\section{Tests the build must pass}\label{sec:tests}
+These vectors were computed by hand or by the existing \code{posmon} code. They use no market data.
+
+\subsection{Ledger shape}
+Net changes $[100, 50, -30, 20]$ at entry spreads $[150, 160, 170, 155]$, with \code{PRO_RATA}. Today's spread is 180, and $\sigma = 10$.
+\begin{center}\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Lot entry & Gross & Open & Distance \\
+\midrule
+150 & 100 & 80 & 3.0 \\
+160 & 50 & 40 & 2.0 \\
+155 & 20 & 20 & 2.5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Then $h_{12} = 0.285714$, $h_{13} = 0.142857$, $h_{14} = 0.571429$, and all other bins are zero. \code{pain_share} = 1.0, \code{depth} = 2.642857, \code{unmatched} = 0.
+
+\subsection{Flow trend}
+\code{taarss([0.5, 0.9, 1.6, 2.0, 2.2])} returns 0.459347.
+
+\subsection{Attention forward pass}
+Set $\tau = 1$, and use two groups and two measures, with
+\[
+\mathbf{E}^G = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix},\;
+\mathbf{E}^M = \begin{pmatrix}0.5 & 0.5\\ -0.5 & 0.5\end{pmatrix},\;
+\mathbf{W} = \begin{pmatrix}1 & 0 & 0.5\\ 0 & 1 & -0.5\end{pmatrix},\;
+\mathbf{c} = \begin{pmatrix}0.1\\ -0.1\end{pmatrix},\;
+\mathbf{s} = \begin{pmatrix}1\\ -1\\ 2\end{pmatrix}.
+\]
+Tokens are $(g,m) = (0,0), (0,1), (1,0), (1,1)$, with $b = (1, -1, 0.5, 2)$ and $x = (1, 2, -1, 0.5)$. Then:
+\begin{itemize}
+\item $\mathbf{q} = (2.1, -2.1)$.
+\item $a = (0.877741, 0.107485, 0.013162, 0.001612)$.
+\item $z = 0.657802$, and entropy is $0.421558$.
+\end{itemize}
+A missing token must carry weight zero, and the rest must still sum to 1.
+
+\subsection{Pressure}
+Three funds with $\Delta H = (10, -20, 5)$ and flows $(3, -5, -1)$. $P_{75} = 2$, $P_{25} = -2$ and $AO = 1000$. Pressure is $+1.0$ percent, meaning net selling.
+
+\subsection{Whole-bond ledger}
+Issue 1000 at 100 bp. Week 1: customers sell 50, then buy 50 at 110. Week 2: customers sell 100, then buy 60 at 130. Use \code{PRO_RATA}, with sells first, today's spread 130 and $\sigma = 10$.
+\begin{center}\small
+\begin{tabular}{@{}rrr@{}}
+\toprule
+Lot entry & Open & Distance \\
+\midrule
+100 & 855.0000 & 3.0 \\
+110 & 45.0000 & 2.0 \\
+130 & 60.0000 & 0.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Open total is 960, so the dealer gap is 40 and unmatched is 0. \code{pain_share} is 0.9375, and \code{depth} is 2.9500. A lot at exactly today's level has distance zero, and does not count as under water.
+
+\subsection{Turnover cost}
+$C_0 = 100$, with $V = (0.1, 0.2)$ and $s = (110, 90)$. Then $C_1 = 101.0$ and $C_2 = 98.8$. The lot version gives 720 at 100, 80 at 110, and 200 at 90. They sum to 1000, and their weighted mean is 98.8.
+
+\subsection{Behaviour tests}
+\begin{enumerate}
+\item \textbf{Point-in-time:} rebuild every feature with data cut at a past week. Values at or before that week must not change.
+\item \textbf{Planted signal:} make a target from a known feature. The pipeline must find it.
+\item \textbf{Pure noise:} random features must reject at about the nominal rate.
+\item \textbf{Leakage canary:} add a feature equal to the future target, but only in training blocks. The out-of-fold process must not show gains from it in test.
+\item \textbf{Sign:} a synthetic series of customer buys must raise \code{cum_flow}, and a spread rise must increase long-side distance.
+\item \textbf{Empty ledger:} a full removal returns a missing row.
+\item \textbf{Roll:} a CDX roll with no position change must leave the ledger unchanged.
+\item \textbf{Bins:} every shape sums to 1 within $10^{-9}$. Pain share stays between 0 and 1.
+\end{enumerate}
+
+\section{Running it}\label{sec:ops}
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+When & Job \\
+\midrule
+Daily, after TRACE cut & Load TRACE, marks, ETF NAV and shares, curve. Run load checks. \\
+Daily, next morning & ETF share flow and holdings changes, with the $k$-day lag rule. \\
+Friday, 15:35 New York & Poll for CFTC reports, every 5 minutes until new data appears. \\
+Friday, after close & Build weekly features, panel and monitor report. \\
+Twice monthly & FINRA short interest. \\
+Monthly & Rerun flow trend by segment. \\
+Yearly & Walk-forward refit, only if a model has been adopted. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{The weekly monitor}
+For each market, show the reading, its 52-week range, coverage, and a data-quality flag. Show one page per market, plus an issuer table with the largest accumulations and reductions. Label it as description, unless a model has passed Section~\ref{sec:valid}.
+
+\subsection{Drift and alerts}
+\begin{enumerate}
+\item Feature coverage falls more than 20\% week on week.
+\item Any feed is late.
+\item A live feature's distribution moves beyond its historical 1st to 99th percentile for 4 weeks.
+\item Sign acceptance test fails.
+\item Trader count for a futures contract falls below 20.
+\end{enumerate}
+
+\section{Build order}\label{sec:order}
+Time estimates assume feeds already exist, and one person.
+
+\begin{enumerate}
+\item \textbf{Phase 1, TRACE monitor. About a week.} Contracts, spreads, cleaning, sign test, flow features, ledger shape, weekly report.
+\item \textbf{Phase 1b, full-coverage cost. About a week.} Whole-bond ledger, turnover cost, validation against any book values you can get (Section~\ref{sec:cost}). The holder split comes later, once NAIC and N-PORT access is settled.
+\item \textbf{Phase 2, ETF layer. About a week.} Shares, NAV, holdings changes, pressure, segment flow trend, short interest.
+\item \textbf{Phase 3, RFQ layer on the work machine. Days, if your data is ready.} Sign mapping, de-duplication, bucket features, mark benchmark.
+\item \textbf{Phase 4, futures and CDX monitors. A few days each.} Guards, roll handling, proxies.
+\item \textbf{Phase 5, B0 and M1. About a week.} Validation harness, placebos, statistics. Run it on TRACE and RFQ. Use far more issuers and years than the pilot, with amount outstanding from a reference file. Those are what the pilot lacked at issuer level and 13 weeks.
+\item \textbf{Phase 6, M2. Days.} Only if M1 passes, or as a stated exploratory run.
+\item \textbf{Phase 7, M3. One to two weeks.} Only if M2 passes, and on a much larger panel. The pilot's panel, with 123 weeks and 12 issuers, is too small to train attention reliably, and it gave no signal for attention to weigh.
+\end{enumerate}
+
+\section{Decisions to make before you run tests}
+Record each in \code{models.yaml} before any result exists.
+\begin{enumerate}
+\item The final holdout dates.
+\item The dealer capacity and funding stress series.
+\item The primary horizon, proposed as $H = 4$.
+\item OAS or G-spread, and which vendor.
+\item Whether uncapped TRACE is available. If not, state how capped sizes are treated.
+\item The bucket definitions for RFQ.
+\item Which CDX roll window you exclude.
+\item Internal client or dealer positions, if you have any. They would replace the proxies, and they could split holders properly.
+\end{enumerate}
+
+\section{Known limits}
+\begin{enumerate}
+\item TRACE and anonymous RFQ data don't identify holders. So attention can weigh measures, but not true holder types, unless you add holder data.
+\item Section~\ref{sec:cost} gives a cost estimate for the whole bond. It's still an estimate, because TRACE doesn't show who sold. Fang (2024) shows the value of measured cost basis, so use NAIC book values wherever you can get them.
+\item Client breadth, the split that mattered in Czech and Pinter (2020), needs client identity. Your RFQ data doesn't have it.
+\item Credit moves together. Many bonds are not many independent bets.
+\item Reproducing a source is not evidence that a signal works.
+\end{enumerate}
+
+\section*{Companion documents}
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL@{}}
+\toprule
+Path, under \code{spec/} & What it holds \\
+\midrule
+\code{positioning_spec.pdf} & All source methods P1--P5 and I1--I13, and \code{posmon} \\
+\code{research/literature/literature_review.pdf} & Full citations for every paper named here, with reading levels \\
+\code{research/dh2021/dh2021_spec.pdf} & Dannhauser and Hoseinzade rebuild \\
+\code{research/credit_etf/} & Credit ETF study, plan and results \\
+\code{research/improvements/} & Out-of-sample study on rates and FX \\
+\code{research/trace_pilot/} & TRACE pilot, plan and results when finished \\
+\code{research/embedding/positioning_embedding_method.pdf} & Short version of Sections~\ref{sec:shape} and \ref{sec:models} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{document}

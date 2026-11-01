@@ -1,0 +1,143 @@
+{
+ "uncond_scale_best": {
+  "k": 1.0,
+  "start": "2009-06-01",
+  "end": "2018-01-31",
+  "rmse_ex1": 0.024874637124407534,
+  "rmse_ex2": 0.027601235188095954,
+  "n": 453
+ },
+ "uncond_k1_best": {
+  "k": 1.0,
+  "start": "2009-06-01",
+  "end": "2018-01-31",
+  "rmse_ex1": 0.024874637124407534,
+  "rmse_ex2": 0.027601235188095954,
+  "n": 453
+ },
+ "chart_range_ex1": [
+  -0.934,
+  0.758
+ ],
+ "tuesday_dgs10_range_2009_06": [
+  -0.8400000000000003,
+  0.69
+ ],
+ "base_rate_pinned": {
+  "sample": "2009-06-02 to 2018-01-30",
+  "rally_strict": 0.5077262693156733,
+  "rally_with_ties": 0.5364238410596026
+ },
+ "pinned_grid_size": 252,
+ "pinned_best": {
+  "basis": "combined",
+  "contracts": "4",
+  "weight": "contracts",
+  "start": "2009-06-01",
+  "end": "2018-01-31",
+  "n": 449,
+  "n_buy": 61,
+  "n_sell": 68,
+  "base": 0.5367483296213809,
+  "buy": 0.5901639344262295,
+  "sell": 0.45588235294117646,
+  "rm_uncond": 0.024771330467869262,
+  "rm_buy": 0.2524825821849084,
+  "rm_sell": 0.21758986920822931,
+  "rm_cond": 0.23568284355125785,
+  "rate_gap": 0.03983606557377051
+ },
+ "grid_rates_total": 14112,
+ "grid_rates_within_1pt": 14,
+ "grid_rates_within_1pt_and_range_ok": 0,
+ "grid_rates_within_2pt_and_range_ok": 0,
+ "shape_variants": 5852,
+ "rolling_variants": 25088,
+ "uncond_variants": 13600,
+ "best_uncond_by_dow": [
+  {
+   "series": "weekly_dow1",
+   "start": "2009-06-01",
+   "end": "2018-01-31",
+   "rmse": 0.025,
+   "rally": 0.508,
+   "rally_le": 0.536
+  },
+  {
+   "series": "daily_19d",
+   "start": "2009-10-01",
+   "end": "2017-09-30",
+   "rmse": 0.051,
+   "rally": 0.52,
+   "rally_le": 0.544
+  },
+  {
+   "series": "weekly_dow2",
+   "start": "2011-04-01",
+   "end": "2017-09-30",
+   "rmse": 0.053,
+   "rally": 0.528,
+   "rally_le": 0.543
+  },
+  {
+   "series": "weekly_dow0",
+   "start": "2009-02-01",
+   "end": "2019-01-31",
+   "rmse": 0.054,
+   "rally": 0.511,
+   "rally_le": 0.521
+  },
+  {
+   "series": "daily_20d",
+   "start": "2009-10-01",
+   "end": "2017-12-31",
+   "rmse": 0.056,
+   "rally": 0.515,
+   "rally_le": 0.535
+  },
+  {
+   "series": "wavg_fri",
+   "start": "2009-10-01",
+   "end": "2017-09-30",
+   "rmse": 0.059,
+   "rally": 0.514,
+   "rally_le": 0.538
+  },
+  {
+   "series": "daily_22d",
+   "start": "2011-03-01",
+   "end": "2017-09-30",
+   "rmse": 0.059,
+   "rally": 0.528,
+   "rally_le": 0.548
+  },
+  {
+   "series": "daily_21d",
+   "start": "2011-03-01",
+   "end": "2017-09-30",
+   "rmse": 0.063,
+   "rally": 0.52,
+   "rally_le": 0.541
+  },
+  {
+   "series": "weekly_dow3",
+   "start": "2010-01-01",
+   "end": "2017-08-31",
+   "rmse": 0.064,
+   "rally": 0.52,
+   "rally_le": 0.53
+  },
+  {
+   "series": "weekly_dow4",
+   "start": "2006-06-01",
+   "end": "2019-01-31",
+   "rmse": 0.088,
+   "rally": 0.519,
+   "rally_le": 0.543
+  }
+ ],
+ "best_cond_rmse_full_sample": 0.1279700218945483,
+ "best_cond_rmse_rolling": 0.1181949068959082,
+ "best_cond_rmse_lev_full_sample": 0.2011946770365832,
+ "best_cond_rmse_lev_rolling": 0.2187802218637083
+}

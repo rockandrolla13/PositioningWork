@@ -1,0 +1,157 @@
+{
+ "carry_variants": [
+  {
+   "variant": "10y weekly chg, 52w",
+   "z_start": "1992-01-01",
+   "carry": 4.455177587297676
+  },
+  {
+   "variant": "10y weekly chg, 52w",
+   "z_start": "1993-01-01",
+   "carry": 4.865833901192882
+  },
+  {
+   "variant": "10y weekly chg, 52w",
+   "z_start": "1990-01-01",
+   "carry": 4.701920485668816
+  },
+  {
+   "variant": "10y weekly chg, 52w",
+   "z_start": "1980-01-01",
+   "carry": 6.451963291737302
+  },
+  {
+   "variant": "10y daily chg, 252d",
+   "z_start": "1992-01-01",
+   "carry": 5.97174447704099
+  },
+  {
+   "variant": "10y daily chg, 252d",
+   "z_start": "1993-01-01",
+   "carry": 6.432043405910939
+  },
+  {
+   "variant": "10y daily chg, 252d",
+   "z_start": "1990-01-01",
+   "carry": 6.171636051769438
+  },
+  {
+   "variant": "10y daily chg, 252d",
+   "z_start": "1980-01-01",
+   "carry": 7.560939585822717
+  },
+  {
+   "variant": "slope weekly chg, 52w",
+   "z_start": "1992-01-01",
+   "carry": 5.668870291696324
+  },
+  {
+   "variant": "slope weekly chg, 52w",
+   "z_start": "1993-01-01",
+   "carry": 5.977529527366105
+  },
+  {
+   "variant": "slope weekly chg, 52w",
+   "z_start": "1990-01-01",
+   "carry": 5.849061159159237
+  },
+  {
+   "variant": "slope weekly chg, 52w",
+   "z_start": "1980-01-01",
+   "carry": 7.102159997596731
+  },
+  {
+   "variant": "10y weekly abs, 52w",
+   "z_start": "1992-01-01",
+   "carry": 3.391514121036663
+  },
+  {
+   "variant": "10y weekly abs, 52w",
+   "z_start": "1993-01-01",
+   "carry": 3.8440783933620892
+  },
+  {
+   "variant": "10y weekly abs, 52w",
+   "z_start": "1990-01-01",
+   "carry": 3.6527951490598243
+  },
+  {
+   "variant": "10y weekly abs, 52w",
+   "z_start": "1980-01-01",
+   "carry": 5.57678893188692
+  }
+ ],
+ "printed": {
+  "carry": 5.4,
+  "momentum": -4.6,
+  "equity": 1.7,
+  "business": 4.7
+ },
+ "momentum": [
+  {
+   "span": 4,
+   "raw": -0.26509964595679164,
+   "implied_scale": 2.3116326270632177
+  },
+  {
+   "span": 6,
+   "raw": -0.2884407778424856,
+   "implied_scale": 2.1245712745625647
+  },
+  {
+   "span": 8,
+   "raw": -0.1357204244815387,
+   "implied_scale": 4.515259905483016
+  },
+  {
+   "span": 9,
+   "raw": -0.03101199550439013,
+   "implied_scale": 19.760514634728228
+  },
+  {
+   "span": 13,
+   "raw": 0.46245225754268804,
+   "implied_scale": -1.3251378515760834
+  },
+  {
+   "span": 17,
+   "raw": 0.9927078167875758,
+   "implied_scale": -0.6173145619017119
+  },
+  {
+   "span": 18,
+   "raw": 1.1254040994137848,
+   "implied_scale": -0.5445270648434969
+  },
+  {
+   "span": 26,
+   "raw": 2.1476521734389933,
+   "implied_scale": -0.28534089392852746
+  }
+ ],
+ "exhibit2_points": 158,
+ "exhibit2_corr_all": {
+  "line": 1.0,
+  "carry": -0.167,
+  "momentum": 0.572,
+  "equity_us_only": 0.422,
+  "public_mean": 0.591,
+  "public_x34": 0.591
+ },
+ "exhibit2_corr_live": {
+  "line": 1.0,
+  "carry": 0.036701345252155536,
+  "momentum": 0.4285859733640668,
+  "equity_us_only": 0.40913219704078807,
+  "public_mean": 0.5406361265900199,
+  "public_x34": 0.5406361265900202
+ },
+ "n_live": 96,
+ "carry_rule_value": 4.455177587297676,
+ "equity_us_only_value": -1.325972523826634,
+ "variants": 24,
+ "exhibit2_cells": 632,
+ "exhibit2_live": 342,
+ "exhibit2_live_inside_band": 1,
+ "exhibit2_live_no_partner": 0
+}

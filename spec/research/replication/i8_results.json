@@ -1,0 +1,925 @@
+{
+ "printed": {
+  "TU": -1.58,
+  "FV": -1.69,
+  "TY": -1.78,
+  "US": -1.81
+ },
+ "rows": [
+  {
+   "date": "2023-10-30",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_response",
+   "value": -0.6954366151948235,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_trend_strength",
+   "value": -1.900765068598249,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "sum_response",
+   "value": -2.0863098455844704,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "response_of_mean",
+   "value": -0.865509721288111,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_response",
+   "value": -0.6546712258816134,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_trend_strength",
+   "value": -2.3045379889834394,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "sum_response",
+   "value": -1.9640136776448403,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "response_of_mean",
+   "value": -0.6863896554373038,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_response",
+   "value": -0.6255290738221935,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_trend_strength",
+   "value": -2.3891081025608654,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "sum_response",
+   "value": -1.8765872214665804,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "response_of_mean",
+   "value": -0.644355009533519,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_response",
+   "value": -0.5447918945412017,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_trend_strength",
+   "value": -2.6188040322594337,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "sum_response",
+   "value": -1.6343756836236052,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "response_of_mean",
+   "value": -0.5297860218748206,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_response",
+   "value": -0.479656347571867,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_trend_strength",
+   "value": -3.301426737285872,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "sum_response",
+   "value": -1.438969042715601,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "response_of_mean",
+   "value": -0.2431769066785929,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_response",
+   "value": -0.3904543473661319,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_trend_strength",
+   "value": -4.31874932284694,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "sum_response",
+   "value": -1.1713630420983956,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-30",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "response_of_mean",
+   "value": -0.04580329439615877,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_response",
+   "value": -0.7026743496076624,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_trend_strength",
+   "value": -1.9412224477906352,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "sum_response",
+   "value": -2.108023048822987,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "response_of_mean",
+   "value": -0.8502418595367074,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_response",
+   "value": -0.6530845267834894,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_trend_strength",
+   "value": -2.3181333106128155,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "sum_response",
+   "value": -1.959253580350468,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "response_of_mean",
+   "value": -0.6796757444925513,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_response",
+   "value": -0.6259992669876849,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_trend_strength",
+   "value": -2.3931921105717966,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "sum_response",
+   "value": -1.877997800963055,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "response_of_mean",
+   "value": -0.6423125746708915,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_response",
+   "value": -0.5446670745213098,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_trend_strength",
+   "value": -2.618982372026352,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "sum_response",
+   "value": -1.6340012235639294,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "response_of_mean",
+   "value": -0.5296983871407018,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_response",
+   "value": -0.4780552109546257,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_trend_strength",
+   "value": -3.2882224294363827,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "sum_response",
+   "value": -1.4341656328638772,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "response_of_mean",
+   "value": -0.247530679681877,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_response",
+   "value": -0.3896133601958857,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_trend_strength",
+   "value": -4.283877227502395,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "sum_response",
+   "value": -1.168840080587657,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-27",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "response_of_mean",
+   "value": -0.04897189508952221,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_response",
+   "value": -0.7139379772228859,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_trend_strength",
+   "value": -2.0181195970472636,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "sum_response",
+   "value": -2.1418139316686577,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "response_of_mean",
+   "value": -0.8191388484036959,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_response",
+   "value": -0.6472188708143808,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_trend_strength",
+   "value": -2.3452079775968473,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "sum_response",
+   "value": -1.9416566124431422,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "response_of_mean",
+   "value": -0.6662487294520366,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_response",
+   "value": -0.6223089228834772,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_trend_strength",
+   "value": -2.409868732732042,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "sum_response",
+   "value": -1.8669267686504316,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "response_of_mean",
+   "value": -0.6339655061548486,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_response",
+   "value": -0.5420199943064002,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_trend_strength",
+   "value": -2.6261209292494967,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "sum_response",
+   "value": -1.6260599829192006,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "response_of_mean",
+   "value": -0.526193563789344,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_response",
+   "value": -0.4745496285609044,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_trend_strength",
+   "value": -3.2815328425287356,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "sum_response",
+   "value": -1.4236488856827132,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "response_of_mean",
+   "value": -0.2497562118171346,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_response",
+   "value": -0.38717014323511606,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_trend_strength",
+   "value": -4.259651863774079,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "sum_response",
+   "value": -1.1615104297053482,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-26",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "response_of_mean",
+   "value": -0.05128088291127092,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_response",
+   "value": -0.7110439504767335,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "mean_trend_strength",
+   "value": -2.090989327295433,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "sum_response",
+   "value": -2.1331318514302007,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TU",
+   "series": "DGS2",
+   "form": "response_of_mean",
+   "value": -0.7875031099545762,
+   "printed": -1.58
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_response",
+   "value": -0.6346652591498341,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "mean_trend_strength",
+   "value": -2.3830017144968334,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "sum_response",
+   "value": -1.9039957774495022,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "FV",
+   "series": "DGS5",
+   "form": "response_of_mean",
+   "value": -0.6474073664883158,
+   "printed": -1.69
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_response",
+   "value": -0.6134802409153465,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "mean_trend_strength",
+   "value": -2.435612486905505,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "sum_response",
+   "value": -1.8404407227460393,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS7",
+   "form": "response_of_mean",
+   "value": -0.6210647278933493,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_response",
+   "value": -0.5349739334293533,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "mean_trend_strength",
+   "value": -2.644447797070251,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "sum_response",
+   "value": -1.6049218002880599,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "TY",
+   "series": "DGS10",
+   "form": "response_of_mean",
+   "value": -0.5172236270750942,
+   "printed": -1.78
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_response",
+   "value": -0.4681475818324514,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "mean_trend_strength",
+   "value": -3.2891101108022105,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "sum_response",
+   "value": -1.4044427454973543,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS20",
+   "form": "response_of_mean",
+   "value": -0.24723636197743884,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_response",
+   "value": -0.38114144456080856,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "mean_trend_strength",
+   "value": -4.253484498521691,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "sum_response",
+   "value": -1.1434243336824257,
+   "printed": -1.81
+  },
+  {
+   "date": "2023-10-25",
+   "contract": "US",
+   "series": "DGS30",
+   "form": "response_of_mean",
+   "value": -0.05188319953932245,
+   "printed": -1.81
+  }
+ ],
+ "table": [
+  {
+   "date": "2023-10-25",
+   "form": "mean_response",
+   "FV": -0.6346652591498341,
+   "TU": -0.7110439504767335,
+   "TY": -0.6134802409153465,
+   "US": -0.4681475818324514,
+   "mae": 1.1081657419064086
+  },
+  {
+   "date": "2023-10-25",
+   "form": "mean_trend_strength",
+   "FV": -2.3830017144968334,
+   "TU": -2.090989327295433,
+   "TY": -2.435612486905505,
+   "US": -3.2891101108022105,
+   "mae": 0.8346784098749955
+  },
+  {
+   "date": "2023-10-25",
+   "form": "response_of_mean",
+   "FV": -0.6474073664883158,
+   "TU": -0.7875031099545762,
+   "TY": -0.6210647278933493,
+   "US": -0.24723636197743884,
+   "mae": 1.13919710842158
+  },
+  {
+   "date": "2023-10-25",
+   "form": "sum_response",
+   "FV": -1.9039957774495022,
+   "TU": -2.1331318514302007,
+   "TY": -1.8404407227460393,
+   "US": -1.4044427454973543,
+   "mae": 0.308281401532097
+  },
+  {
+   "date": "2023-10-26",
+   "form": "mean_response",
+   "FV": -0.6472188708143808,
+   "TU": -0.7139379772228859,
+   "TY": -0.6223089228834772,
+   "US": -0.4745496285609044,
+   "mae": 1.100496150129588
+  },
+  {
+   "date": "2023-10-26",
+   "form": "mean_trend_strength",
+   "FV": -2.3452079775968473,
+   "TU": -2.0181195970472636,
+   "TY": -2.409868732732042,
+   "US": -3.2815328425287356,
+   "mae": 0.798682287476222
+  },
+  {
+   "date": "2023-10-26",
+   "form": "response_of_mean",
+   "FV": -0.6662487294520366,
+   "TU": -0.8191388484036959,
+   "TY": -0.6339655061548486,
+   "US": -0.2497562118171346,
+   "mae": 1.122722676043071
+  },
+  {
+   "date": "2023-10-26",
+   "form": "sum_response",
+   "FV": -1.9416566124431422,
+   "TU": -2.1418139316686577,
+   "TY": -1.8669267686504316,
+   "US": -1.4236488856827132,
+   "mae": 0.3216871067698796
+  },
+  {
+   "date": "2023-10-27",
+   "form": "mean_response",
+   "FV": -0.6530845267834894,
+   "TU": -0.7026743496076624,
+   "TY": -0.6259992669876849,
+   "US": -0.4780552109546257,
+   "mae": 1.1000466614166344
+  },
+  {
+   "date": "2023-10-27",
+   "form": "mean_trend_strength",
+   "FV": -2.3181333106128155,
+   "TU": -1.9412224477906352,
+   "TY": -2.3931921105717966,
+   "US": -3.2882224294363827,
+   "mae": 0.7701925746029075
+  },
+  {
+   "date": "2023-10-27",
+   "form": "response_of_mean",
+   "FV": -0.6796757444925513,
+   "TU": -0.8502418595367074,
+   "TY": -0.6423125746708915,
+   "US": -0.247530679681877,
+   "mae": 1.1100597854044933
+  },
+  {
+   "date": "2023-10-27",
+   "form": "sum_response",
+   "FV": -1.959253580350468,
+   "TU": -2.108023048822987,
+   "TY": -1.877997800963055,
+   "US": -1.4341656328638772,
+   "mae": 0.31777719931815823
+  },
+  {
+   "date": "2023-10-30",
+   "form": "mean_response",
+   "FV": -0.6546712258816134,
+   "TU": -0.6954366151948235,
+   "TY": -0.6255290738221935,
+   "US": -0.479656347571867,
+   "mae": 1.1011766843823756
+  },
+  {
+   "date": "2023-10-30",
+   "form": "mean_trend_strength",
+   "FV": -2.3045379889834394,
+   "TU": -1.900765068598249,
+   "TY": -2.3891081025608654,
+   "US": -3.301426737285872,
+   "mae": 0.7589594743571064
+  },
+  {
+   "date": "2023-10-30",
+   "form": "response_of_mean",
+   "FV": -0.6863896554373038,
+   "TU": -0.865509721288111,
+   "TY": -0.644355009533519,
+   "US": -0.2431769066785929,
+   "mae": 1.1051421767656184
+  },
+  {
+   "date": "2023-10-30",
+   "form": "sum_response",
+   "FV": -1.9640136776448403,
+   "TU": -2.0863098455844704,
+   "TY": -1.8765872214665804,
+   "US": -1.438969042715601,
+   "mae": 0.3119854254950725
+  }
+ ],
+ "variants": 16
+}

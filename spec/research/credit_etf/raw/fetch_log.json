@@ -1,0 +1,248 @@
+{
+ "cftc/legacy_fut/BLOOMBERG_HY_CREDIT": {
+  "status": "cached"
+ },
+ "cftc/legacy_fut/BLOOMBERG_IG_CREDIT": {
+  "status": "cached"
+ },
+ "cftc/tff_combined/BLOOMBERG_HY_CREDIT": {
+  "status": "cached"
+ },
+ "cftc/tff_combined/BLOOMBERG_IG_CREDIT": {
+  "status": "cached"
+ },
+ "cftc/tff_fut/BLOOMBERG_HY_CREDIT": {
+  "status": "cached"
+ },
+ "cftc/tff_fut/BLOOMBERG_IG_CREDIT": {
+  "status": "cached"
+ },
+ "duration/EMB": {
+  "points": 20
+ },
+ "duration/FALN": {
+  "points": 11
+ },
+ "duration/HYG": {
+  "points": 38
+ },
+ "duration/HYGH": {
+  "points": 13
+ },
+ "duration/IGIB": {
+  "points": 20
+ },
+ "duration/IGSB": {
+  "points": 20
+ },
+ "duration/LQD": {
+  "points": 38
+ },
+ "duration/LQDH": {
+  "points": 13
+ },
+ "duration/SHYG": {
+  "points": 14
+ },
+ "duration/USHY": {
+  "points": 10
+ },
+ "duration/USIG": {
+  "points": 20
+ },
+ "finra/EMB": {
+  "status": "cached"
+ },
+ "finra/FALN": {
+  "status": "cached"
+ },
+ "finra/HYG": {
+  "status": "cached"
+ },
+ "finra/HYGH": {
+  "status": "cached"
+ },
+ "finra/IGIB": {
+  "status": "cached"
+ },
+ "finra/IGSB": {
+  "status": "cached"
+ },
+ "finra/JNK": {
+  "status": "cached"
+ },
+ "finra/LQD": {
+  "status": "cached"
+ },
+ "finra/LQDH": {
+  "status": "cached"
+ },
+ "finra/SHYG": {
+  "status": "cached"
+ },
+ "finra/SJNK": {
+  "status": "cached"
+ },
+ "finra/SPIB": {
+  "status": "cached"
+ },
+ "finra/SPLB": {
+  "status": "cached"
+ },
+ "finra/SPSB": {
+  "status": "cached"
+ },
+ "finra/USHY": {
+  "status": "cached"
+ },
+ "finra/USIG": {
+  "status": "cached"
+ },
+ "finra/VCIT": {
+  "status": "cached"
+ },
+ "finra/VCSH": {
+  "status": "cached"
+ },
+ "fred/AAA10Y": {
+  "status": "cached"
+ },
+ "fred/BAA10Y": {
+  "status": "cached"
+ },
+ "fred/BAMLC0A0CM": {
+  "status": "cached"
+ },
+ "fred/BAMLH0A0HYM2": {
+  "status": "cached"
+ },
+ "fred/DGS1": {
+  "status": "cached"
+ },
+ "fred/DGS10": {
+  "status": "cached"
+ },
+ "fred/DGS2": {
+  "status": "cached"
+ },
+ "fred/DGS20": {
+  "status": "cached"
+ },
+ "fred/DGS3": {
+  "status": "cached"
+ },
+ "fred/DGS30": {
+  "status": "cached"
+ },
+ "fred/DGS5": {
+  "status": "cached"
+ },
+ "fred/DGS7": {
+  "status": "cached"
+ },
+ "fred/DTB3": {
+  "status": "cached"
+ },
+ "ishares/EMB": {
+  "status": "cached"
+ },
+ "ishares/FALN": {
+  "status": "cached"
+ },
+ "ishares/HYG": {
+  "status": "cached"
+ },
+ "ishares/HYGH": {
+  "status": "cached"
+ },
+ "ishares/IGIB": {
+  "status": "cached"
+ },
+ "ishares/IGSB": {
+  "status": "cached"
+ },
+ "ishares/LQD": {
+  "status": "cached"
+ },
+ "ishares/LQDH": {
+  "status": "cached"
+ },
+ "ishares/SHYG": {
+  "status": "cached"
+ },
+ "ishares/USHY": {
+  "status": "cached"
+ },
+ "ishares/USIG": {
+  "status": "cached"
+ },
+ "ssga/JNK": {
+  "status": "cached"
+ },
+ "ssga/SJNK": {
+  "status": "cached"
+ },
+ "ssga/SPIB": {
+  "status": "cached"
+ },
+ "ssga/SPLB": {
+  "status": "cached"
+ },
+ "ssga/SPSB": {
+  "status": "cached"
+ },
+ "yahoo/EMB": {
+  "status": "cached"
+ },
+ "yahoo/FALN": {
+  "status": "cached"
+ },
+ "yahoo/HYG": {
+  "status": "cached"
+ },
+ "yahoo/HYGH": {
+  "status": "cached"
+ },
+ "yahoo/IGIB": {
+  "status": "cached"
+ },
+ "yahoo/IGSB": {
+  "status": "cached"
+ },
+ "yahoo/JNK": {
+  "status": "cached"
+ },
+ "yahoo/LQD": {
+  "status": "cached"
+ },
+ "yahoo/LQDH": {
+  "status": "cached"
+ },
+ "yahoo/SHYG": {
+  "status": "cached"
+ },
+ "yahoo/SJNK": {
+  "status": "cached"
+ },
+ "yahoo/SPIB": {
+  "status": "cached"
+ },
+ "yahoo/SPLB": {
+  "status": "cached"
+ },
+ "yahoo/SPSB": {
+  "status": "cached"
+ },
+ "yahoo/USHY": {
+  "status": "cached"
+ },
+ "yahoo/USIG": {
+  "status": "cached"
+ },
+ "yahoo/VCIT": {
+  "status": "cached"
+ },
+ "yahoo/VCSH": {
+  "status": "cached"
+ }
+}
