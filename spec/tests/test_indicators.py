@@ -314,6 +314,7 @@ def test_workbook_cftc_identity_and_gap():
     assert (problems["check"] == "short_identity").sum() == 0
 
 
+@pytest.mark.skipif(not (DATA / "ty_daily.csv").exists(), reason="ty_daily.csv is restricted data and is not in the public repo")
 def test_daily_checks_find_workbook_faults():
     daily = pd.read_csv(DATA / "ty_daily.csv", parse_dates=["date"], index_col="date")
     flags = check_daily(daily)

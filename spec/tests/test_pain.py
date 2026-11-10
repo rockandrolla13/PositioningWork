@@ -15,6 +15,8 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 
 @pytest.fixture(scope="module")
 def daily():
+    if not (DATA / "ty_daily.csv").exists():
+        pytest.skip("ty_daily.csv is restricted data and is not in the public repo")
     return pd.read_csv(DATA / "ty_daily.csv", parse_dates=["date"], index_col="date")
 
 
