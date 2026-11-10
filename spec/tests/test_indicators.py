@@ -1,5 +1,6 @@
 """Acceptance tests for the positioning indicators."""
 import math
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -8,6 +9,8 @@ import pytest
 from posmon import cta, glgarma, indicators as ind
 from posmon.data import check_cftc, check_daily, known_at, publish_time
 from posmon.stats import newey_west_ols
+
+DATA = Path(__file__).resolve().parents[1] / "data"
 
 
 def weekly_index(n):
@@ -77,9 +80,8 @@ def test_score_uses_in_sample_weekly_spread_and_no_mean():
 
 
 def test_goldman_figures_in_the_reconciliation():
-    from pathlib import Path
     import json
-    path = Path(__file__).resolve().parents[1] / "data" / "reconcile.json"
+    path = DATA / "reconcile.json"
     gf = json.loads(path.read_text())["goldman_filter"]
     am = gf["am_other"]
     assert am["corr_score_vs_next_6m"] == pytest.approx(-0.43, abs=0.01)
@@ -301,7 +303,7 @@ def test_known_at_blocks_lookahead():
 
 
 def test_workbook_cftc_identity_and_gap():
-    weekly = pd.read_csv("data/ty_cftc.csv", parse_dates=["date"], index_col="date")
+    weekly = pd.read_csv(DATA / "ty_cftc.csv", parse_dates=["date"], index_col="date")
     frame = weekly.assign(open_interest=weekly[["dealer_long", "asset_mgr_long", "lev_money_long", "other_rept_long",
                                                 "nonrept_long", "dealer_spread", "asset_mgr_spread",
                                                 "lev_money_spread", "other_rept_spread"]].sum(axis=1))
@@ -313,7 +315,7 @@ def test_workbook_cftc_identity_and_gap():
 
 
 def test_daily_checks_find_workbook_faults():
-    daily = pd.read_csv("data/ty_daily.csv", parse_dates=["date"], index_col="date")
+    daily = pd.read_csv(DATA / "ty_daily.csv", parse_dates=["date"], index_col="date")
     flags = check_daily(daily)
     assert flags["close_outside_range"].sum() == 69
     assert flags["high_equals_low"].sum() == 35

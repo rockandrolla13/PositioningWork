@@ -1,5 +1,6 @@
 """Acceptance tests for the Pain methods. Every expected number has a stated origin."""
 import math
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
@@ -9,15 +10,17 @@ from posmon.pain import (activity_by_price, classify_changes, cftc_pain, harmoni
                          legacy_ladder, legacy_position_per_strike, ms_pain_monitor, rank_monitor, threshold_position,
                          typical_price, workbook_over_under, back_adjust)
 
+DATA = Path(__file__).resolve().parents[1] / "data"
+
 
 @pytest.fixture(scope="module")
 def daily():
-    return pd.read_csv("data/ty_daily.csv", parse_dates=["date"], index_col="date")
+    return pd.read_csv(DATA / "ty_daily.csv", parse_dates=["date"], index_col="date")
 
 
 @pytest.fixture(scope="module")
 def weekly():
-    return pd.read_csv("data/ty_cftc.csv", parse_dates=["date"], index_col="date")
+    return pd.read_csv(DATA / "ty_cftc.csv", parse_dates=["date"], index_col="date")
 
 
 def toy_market():
